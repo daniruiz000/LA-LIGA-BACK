@@ -1,4 +1,4 @@
-import { colegioRelations } from "./colegioRelations";
+import { laLigaRelations } from "./laLigaRelations";
 import { mongoConnect, mongoDisconnect } from "../repositories/mongo-repository"; // Importamos el archivo de conexión a la BBDD
 import { resetClassrooms } from "./resetClassrooms";
 import { resetUsers } from "./resetUsers";
@@ -13,14 +13,14 @@ const seedFunction = async (): Promise<void> => {
     await mongoConnect()
     await resetUsers();
     await resetClassrooms();
-    await colegioRelations()
+    await laLigaRelations()
   } catch (error) {
     console.error(error);
   } finally {
     await mongoDisconnect();
     console.log("                                              ")
     console.log("----------------------------------------------")
-    console.log("---------------- PROCESO TERMINADO ----------------")
+    console.log("-------------- PROCESO TERMINADO -------------")
     console.log("----------------------------------------------")
     console.log("                                              ")
   }
