@@ -59,10 +59,10 @@ export const getPlayersWithoutTeam = async (req: Request, res: Response, next: N
   }
 };
 
-export const getPlayersByMyTeam = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const getUsersByMyTeam = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     // MANAGER
-    if (req.user.rol !== "MANAGER") {
+    if (req.user.rol !== "MANAGER" || req.user.rol !== "PLAYER") {
       res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
       return;
     }
@@ -71,9 +71,18 @@ export const getPlayersByMyTeam = async (req: Request, res: Response, next: Next
       const players = await userOdm.getPlayersByIdTeam(teamId)
       if (!players) {
         res.status(404).json({ error: "No existen jugadores para este equipo" });
-      } else {
-        res.json(players);
+        return;
       }
+      const manager = await userOdm.getManagerByIdTeam(teamId)
+      if (!manager) {
+        res.status(404).json({ error: "No existe manager para este equipo" });
+        return;
+      }
+      const response = {
+        players,
+        manager
+      }
+      res.json(response);
     } else {
       res.status(404).json({ error: "No tienes equipo asignado" });
     }
@@ -159,21 +168,27 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
   try {
     const updateUserId = req.params.id;
 
-    // Solo ADMIN o el propio usuario a sí mismo (cualquier usuario logado)
-    if (req.user.rol !== "ADMIN" && req.user.id !== updateUserId) {
+    // Solo ADMIN o el propio usuario a sí mismo (cualquier usuario logado) / MANAGER A LOS DE SU EQUIPO
+    if (req.user.rol !== "ADMIN" || req.user.id !== updateUserId || req.user.rol !== "MANAGER") {
       res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
       return;
     }
 
     const userToUpdate = await userOdm.getUserById(updateUserId);
     if (!userToUpdate) {
-      res.status(404).json({ error: "No existe el usuario" });
+      res.status(404).json({ error: "No existe el usuario para actualizar" });
       return;
     }
 
     // Guardamos el usuario actualizándolo con los parámetros que nos manden
+    const newLastName = req.user.id !== updateUserId || req.user.rol === "ADMIN" ? req.body.lastName : userToUpdate.get("lastName");
+    const newFirstName = req.user.id !== updateUserId || req.user.rol === "ADMIN" ? req.body.firstName : userToUpdate.get("firstName");
+    const newEmail = req.user.id !== updateUserId || req.user.rol === "ADMIN" ? req.body.email : userToUpdate.get("email");
+    const newPassword = req.user.id !== updateUserId || req.user.rol === "ADMIN" ? req.body.password : userToUpdate.get("password");
+    const newImage = req.user.id !== updateUserId || req.user.rol === "ADMIN" ? req.body.image : userToUpdate.get("image");
     const newRol = req.user.rol === "ADMIN" ? req.body.rol : userToUpdate.get("rol");
-    const userSended = { ...req.body, rol: newRol };
+    const newTeam = (req.user.rol === "MANAGER" && req.user.team === userToUpdate.get("team")) || req.user.rol === "ADMIN" ? req.body.team : userToUpdate.get("team");
+    const userSended = { ...req.body, rol: newRol, team: newTeam, firstName: newFirstName, lastName: newLastName, email: newEmail, password: newPassword, image: newImage };
     Object.assign(userToUpdate, userSended);
     await userToUpdate.save();
 
@@ -225,7 +240,7 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
 
 export const userService = {
   getMyUser,
-  getPlayersByMyTeam,
+  getUsersByMyTeam,
   getPlayersByTeamId,
   getPlayersWithoutTeam,
   getUsers,
