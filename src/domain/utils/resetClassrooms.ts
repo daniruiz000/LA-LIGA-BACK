@@ -1,5 +1,5 @@
 import { classroomList } from "../../data";
-import { classroomOdm } from "../odm/classroom.odm";
+import { classroomOdm } from "../odm/team.odm";
 
 /* Borramos datos de la colección classrooms y creamos classrooms
  con los datos que suministramos en data.ts */
