@@ -12,7 +12,7 @@ const getMatchCount = async (): Promise<number> => {
 };
 
 const getMatchById = async (id: string): Promise<Document<IMatch> | null> => {
-  return await Match.findById(id).populate("team");
+  return await Match.findById(id).populate("localTeam, visitorTeam, goalsLocal, goalsVisitor");
 };
 
 const createMatch = async (matchData: IMatchCreate): Promise<Document<IMatch>> => {
