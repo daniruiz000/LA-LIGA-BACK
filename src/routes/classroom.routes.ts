@@ -1,17 +1,18 @@
 import express from "express";
 
 import { isAuth } from "../domain/services/auth.middleware";
-import { classroomService } from "../domain/services/classroom.service";
+import { teamService } from "../domain/services/team.service";
 import { checkParams } from "../domain/services/checkParams.middleware";
 
-export const classroomRouter = express.Router();
+export const teamRouter = express.Router();
 
-classroomRouter.get("/", checkParams, isAuth, classroomService.getClassrooms);
-classroomRouter.get("/:id", isAuth, classroomService.getClassroomById);
-classroomRouter.get("/name/:name", isAuth, classroomService.getClassroomByName);
-classroomRouter.post("/", isAuth, classroomService.createClassroom);
-classroomRouter.delete("/:id", isAuth, classroomService.deleteClassroom);
-classroomRouter.put("/:id", isAuth, classroomService.updateClassroom);
+teamRouter.get("/", checkParams, isAuth, teamService.getTeams)
+teamRouter.get("/myteam", checkParams, isAuth, teamService.getMyTeam);
+teamRouter.get("/:id", isAuth, teamService.getTeamById);
+teamRouter.get("/name/:name", isAuth, teamService.getTeamByName);
+teamRouter.post("/", isAuth, teamService.createTeam);
+teamRouter.delete("/:id", isAuth, teamService.deleteTeam);
+teamRouter.put("/:id", isAuth, teamService.updateTeam);
 
 /**
  * @swagger

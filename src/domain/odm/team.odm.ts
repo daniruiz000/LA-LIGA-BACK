@@ -1,7 +1,7 @@
 import { Team, ITeam, ITeamCreate } from "../entities/team-entity";
 import { Document } from "mongoose";
 
-const getAllTeam = async (page: number, limit: number): Promise<ITeam[]> => {
+const getAllTeams = async (page: number, limit: number): Promise<ITeam[]> => {
   return await Team.find()
     .limit(limit)
     .skip((page - 1) * limit);
@@ -13,6 +13,10 @@ const getTeamCount = async (): Promise<number> => {
 
 const getTeamById = async (id: string): Promise<Document<ITeam> | null> => {
   return await Team.findById(id);
+};
+
+const getMyTeam = async (page: number, limit: number): Promise<ITeam[]> => {
+  return await Team.find();
 };
 
 const getTeamByName = async (name: string): Promise<Document<ITeam>[]> => {
@@ -46,9 +50,10 @@ const updateTeam = async (id: string, teamData: ITeamCreate): Promise<Document<I
 };
 
 export const teamOdm = {
-  getAllTeam,
+  getAllTeams,
   getTeamCount,
   getTeamById,
+  getMyTeam,
   getTeamByName,
   createTeam,
   createTeamFromArray,
