@@ -9,7 +9,6 @@ declare namespace Express {
       rol: ROL;
       id?: string;
       team?: string;
-      image?: string;
     };
   }
 }
