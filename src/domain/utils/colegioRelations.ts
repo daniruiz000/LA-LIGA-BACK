@@ -1,5 +1,5 @@
 import { subjectList } from "../../data";
-import { Classroom } from "../entities/classroom-entity";
+import { Classroom } from "../entities/team-entity";
 import { Subject } from "../entities/subject-entity";
 import { User } from "../entities/user-entity";
 

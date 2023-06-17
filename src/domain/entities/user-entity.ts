@@ -43,7 +43,7 @@ import mongoose, { Document } from "mongoose";
 
 import validator from "validator";
 import bcrypt from "bcrypt";
-import { Team, ITeam } from "./team-entity";
+import { ITeam } from "./team-entity";
 
 const Schema = mongoose.Schema;
 

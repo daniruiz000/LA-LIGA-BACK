@@ -41,7 +41,7 @@
 
 import mongoose, { Document } from "mongoose";
 
-import { Classroom, IClassroom } from "./classroom-entity";
+import { Classroom, IClassroom } from "./team-entity";
 import { IUser, User } from "./user-entity";
 
 const Schema = mongoose.Schema;

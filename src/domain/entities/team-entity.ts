@@ -2,7 +2,7 @@
  * @swagger
  * components:
  *  schemas:
- *    Classroom:
+ *    Team:
  *      type: object
  *      required:
  *        - name
@@ -15,20 +15,18 @@
  */
 
 import mongoose, { Document } from "mongoose";
-import { IUser } from "./user-entity";
-import { ISubject } from "./subject-entity";
 
 const Schema = mongoose.Schema;
 
-export interface IClassroomCreate {
+export interface ITeamCreate {
   name: string;
-  students?: IUser[];
-  subjects?: ISubject[];
+  initials: string;
+  image?: string;
 }
 
-export type IClassroom = IClassroomCreate & Document
+export type ITeam = ITeamCreate & Document
 
-const classroomSchema = new Schema<IClassroomCreate>(
+const teamSchema = new Schema<ITeamCreate>(
   {
     name: {
       type: String,
@@ -37,9 +35,20 @@ const classroomSchema = new Schema<IClassroomCreate>(
       maxLength: [30, "Nombre demasiado largo, máximo de 30 caracteres"],
       required: true
     },
+    initials: {
+      type: String,
+      trim: true,
+      minLength: [3, "Debe ser un Alias compuesto por 3 letras"],
+      maxLength: [3, "Debe ser un Alias compuesto por 3 letras"],
+      required: true
+    },
+    image: {
+      type: String,
+      required: false,
+    },
   },
   { timestamps: true } // Cada vez que se modifique un documento refleja la hora y fecha de modificación
 );
 
 // Creamos un modelo para que siempre que creamos un classroom valide contra el Schema que hemos creado para ver si es valido.
-export const Classroom = mongoose.model<IClassroomCreate>("Classroom", classroomSchema);
+export const Team = mongoose.model<ITeamCreate>("Team", teamSchema);
