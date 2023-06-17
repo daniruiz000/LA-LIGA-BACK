@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 
-import { classroomOdm } from "../odm/classroom.odm";
+import { classroomOdm } from "../odm/team.odm";
 import { userOdm } from "../odm/user.odm";
 import { subjectOdm } from "../odm/subject.odm";
 
