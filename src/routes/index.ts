@@ -4,7 +4,7 @@ import { swaggerOptions } from "../swagger-options";
 import express, { type Response, type Request } from "express";
 
 import { userRouter } from "./user.routes";
-import { classroomRouter } from "./classroom.routes";
+import { teamRouter } from "./team.routes";
 import { subjectRouter } from "./subject.routes";
 
 import { infoReq } from "../server/infoReq.middleware";
@@ -36,7 +36,7 @@ export const configureRoutes = (app: any): any => {
 
   // Usamos las rutas
   app.use("/user", infoReq, connect, userRouter);
-  app.use("/classroom", infoReq, connect, classroomRouter);
+  app.use("/team", infoReq, connect, teamRouter);
   app.use("/subject", infoReq, connect, subjectRouter);
   app.use("/public", infoReq, connect, express.static("public"));
   app.use("/", infoReq, routerHome);
