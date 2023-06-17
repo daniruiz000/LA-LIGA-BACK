@@ -1,4 +1,5 @@
-import { User, IUser, IUserCreate } from "../entities/user-entity";
+import { ITeamCreate, Team } from "../entities/team-entity";
+import { User, IUser, IUserCreate, ROL } from "../entities/user-entity";
 import { Document } from "mongoose";
 
 const getAllUsers = async (page: number, limit: number): Promise<IUser[]> => {
@@ -15,13 +16,24 @@ const getUserById = async (id: string): Promise<Document<IUser> | null> => {
   return await User.findById(id).populate("team");
 };
 
+const getPlayersByIdTeam = async (teamId: string): Promise<IUser[]> => {
+  const players: IUser[] | null = await User.find({ team: teamId, rol: ROL.PLAYER });
+  return players
+};
+
+const getPlayersWithoutTeam = async (): Promise<IUser[]> => {
+  const players: IUser[] | null = await User.find({ team: undefined });
+  return players
+};
+
+const getManagerByIdTeam = async (teamId: string): Promise<IUser[]> => {
+  const players: IUser[] | null = await User.find({ team: teamId, rol: ROL.MANAGER });
+  return players
+};
+
 const getUserByEmailWithPassword = async (email: string): Promise<Document<IUser> | null> => {
   const user: Document<IUser> | null = await User.findOne({ email }).select("+password") as any;
   return user;
-};
-
-const getStudentsByClassroomId = async (classroomId: string): Promise<IUser[]> => {
-  return await User.find({ classroom: classroomId })
 };
 
 const createUser = async (userData: IUserCreate): Promise<Document<IUser>> => {
@@ -29,6 +41,7 @@ const createUser = async (userData: IUserCreate): Promise<Document<IUser>> => {
   const document: Document<IUser> = await user.save() as any;
   const userCopy = document.toObject()
   delete userCopy.password
+  delete userCopy.rol
   return userCopy;
 };
 
@@ -51,15 +64,39 @@ const updateUser = async (id: string, userData: IUserCreate): Promise<Document<I
   return await User.findByIdAndUpdate(id, userData, { new: true, runValidators: true });
 };
 
+const updateRoleUser = async (userId: string, newRole: ROL): Promise<Document<IUser> | null> => {
+  return await User.findByIdAndUpdate(userId, { rol: newRole }, { new: true, runValidators: true });
+};
+
+const assignTeamToUser = async (userId: string, teamId: string): Promise<Document<IUser> | null> => {
+  const team: ITeamCreate | null = await Team.findById(teamId);
+  if (!team) {
+    throw new Error("Equipo no encontrado");
+  }
+
+  return await User.findByIdAndUpdate(userId, { team: teamId }, { new: true });
+};
+
+const removeTeamFromUser = async (
+  userId: string
+): Promise<Document<IUser> | null> => {
+  return await User.findByIdAndUpdate(userId, { team: null }, { new: true });
+};
+
 export const userOdm = {
   getAllUsers,
   getUserCount,
   getUserById,
+  getPlayersByIdTeam,
+  getPlayersWithoutTeam,
+  getManagerByIdTeam,
   getUserByEmailWithPassword,
-  getStudentsByClassroomId,
   createUser,
   createUsersFromArray,
   deleteUser,
   deleteAllUser,
   updateUser,
+  updateRoleUser,
+  assignTeamToUser,
+  removeTeamFromUser
 };

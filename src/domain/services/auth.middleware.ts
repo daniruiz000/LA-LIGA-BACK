@@ -20,9 +20,7 @@ export const isAuth = async (req: Request, res: Response, next: NextFunction): P
     if (!user) {
       throw new Error("No tienes autorización para realizar esta operación");
     }
-
-    req.user = { id: user.id, rol: user.rol as unknown as CUSTOM_ROL };
-    next();
+    req.user = user;
   } catch (error) {
     res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
   }

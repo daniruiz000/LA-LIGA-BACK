@@ -6,13 +6,15 @@ import { checkParams } from "../domain/services/checkParams.middleware";
 
 export const userRouter = express.Router();
 
-userRouter.get("/", checkParams, isAuth, userService.getUsers);
-userRouter.get("/:id", isAuth, userService.getUserById);
-// userRouter.get("/name/:name", isAuth, userService.getUserByName);
-userRouter.post("/", isAuth, userService.createUser);
-userRouter.delete("/:id", isAuth, userService.deleteUser);
-userRouter.put("/:id", isAuth, userService.updateUser);
-userRouter.post("/login", userService.login);
+userRouter.get("/myuser", isAuth, userService.getMyUser); // TODOS LOS LOGADOS A SI MISMOS
+userRouter.get("/no-team", isAuth, userService.getPlayersWithoutTeam); // MANAGER / ADMIN
+userRouter.get("/myteam-players", isAuth, userService.getUsersByMyTeam); // MANAGER CON EQUIPO ASIGNADO / USERS CON EQUIPO ASIGNADO
+userRouter.get("/", checkParams, isAuth, userService.getUsers); // ADMIN
+userRouter.get("/:id", isAuth, userService.getUserById); // ADMIN
+userRouter.post("/", userService.createUser); // NO LOGADO
+userRouter.delete("/:id", isAuth, userService.deleteUser); // TODOS LOS LOGADOS A SI MISMOS / ADMIN A OTROS
+userRouter.put("/:id", isAuth, userService.updateUser); // TODOS LOS LOGADOS A SI MISMOS PERO NO EL ROL / MANAGER PUEDE MODIFICAR A LOS JUGADORES DE SU EQUIPO / ADMIN A OTROS
+userRouter.post("/login", userService.login); // NO LOGADO
 
 /**
  * @swagger

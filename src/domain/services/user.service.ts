@@ -9,8 +9,8 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction):
     const page = req.query.page ? parseInt(req.query.page as string) : 1;
     const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
 
-    // ADMIN Y TEACHER
-    if (req.user.rol !== "ADMIN" && req.user.rol !== "TEACHER") {
+    // ADMIN
+    if (req.user.rol !== "ADMIN") {
       res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
       return;
     }
@@ -31,15 +31,98 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction):
   }
 };
 
+export const getMyUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    // ADMIN / EL PROPIO USUARIO A SÍ MISMO (CUALQUIER USUARIO LOGADO)
+    const user = req.user;
+    res.json(user);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getPlayersWithoutTeam = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    //  ADMIN / MANAGER
+    if (req.user.rol !== "ADMIN" || req.user.rol !== "MANAGER") {
+      res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
+      return;
+    }
+    const players = await userOdm.getPlayersWithoutTeam()
+    if (!players.length) {
+      res.status(404).json({ error: "No existen jugadores sin equipo" });
+    } else {
+      res.json(players);
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getUsersByMyTeam = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    // MANAGER
+    if (req.user.rol !== "MANAGER" || req.user.rol !== "PLAYER") {
+      res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
+      return;
+    }
+    const teamId = req.user.team;
+    if (teamId) {
+      const players = await userOdm.getPlayersByIdTeam(teamId)
+      if (!players) {
+        res.status(404).json({ error: "No existen jugadores para este equipo" });
+        return;
+      }
+      const manager = await userOdm.getManagerByIdTeam(teamId)
+      if (!manager) {
+        res.status(404).json({ error: "No existe manager para este equipo" });
+        return;
+      }
+      const response = {
+        players,
+        manager
+      }
+      res.json(response);
+    } else {
+      res.status(404).json({ error: "No tienes equipo asignado" });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+// SIN USAR
+export const getPlayersByTeamId = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    //  ADMIN
+    if (req.user.rol !== "ADMIN") {
+      res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
+      return;
+    }
+    const teamId = req.params.team;
+    if (teamId) {
+      const players = await userOdm.getPlayersByIdTeam(teamId)
+      if (!players) {
+        res.status(404).json({ error: "No existen jugadores para este equipo" });
+      } else {
+        res.json(players);
+      }
+    } else {
+      res.status(404).json({ error: "No existe este equipo" });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const getUserById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    //  ADMIN, TEACHER Y EL PROPIO USUARIO A SÍ MISMO
-    const id = req.params.id;
-    if (req.user.id !== id && req.user.rol !== "ADMIN" && req.user.rol !== "TEACHER") {
+    //  ADMIN
+    if (req.user.rol !== "ADMIN") {
       res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
       return;
     }
 
+    const id = req.params.id;
     const user = await userOdm.getUserById(id);
     if (!user) {
       res.status(404).json({ error: "No existe el usuario" });
@@ -53,12 +136,7 @@ export const getUserById = async (req: Request, res: Response, next: NextFunctio
 
 export const createUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    // Sólo ADMIN
-    if (req.user.rol !== "ADMIN") {
-      res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
-      return;
-    }
-
+    // NO LOGADO
     const createdUser = await userOdm.createUser(req.body);
     res.status(201).json(createdUser);
   } catch (error) {
@@ -68,14 +146,14 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
 
 export const deleteUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    // Sólo ADMIN
-    const id = req.params.id;
-    if (req.user.rol !== "ADMIN") {
+    // ADMIN / EL PROPIO USUARIO A SÍ MISMO (CUALQUIER USUARIO LOGADO)
+    const deletedUserId = req.params.id;
+    if (req.user.rol !== "ADMIN" || req.user.id !== deletedUserId) {
       res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
       return;
     }
 
-    const userDeleted = await userOdm.deleteUser(id);
+    const userDeleted = await userOdm.deleteUser(deletedUserId);
     if (!userDeleted) {
       res.status(404).json({ error: "No existe el usuario" });
       return;
@@ -88,26 +166,36 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
 
 export const updateUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const id = req.params.id;
-    // Sólo ADMIN
-    if (req.user.rol !== "ADMIN") {
+    const updateUserId = req.params.id;
+
+    // Solo ADMIN o el propio usuario a sí mismo (cualquier usuario logado) / MANAGER A LOS DE SU EQUIPO
+    if (req.user.rol !== "ADMIN" || req.user.id !== updateUserId || req.user.rol !== "MANAGER") {
       res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
       return;
     }
 
-    const userToUpdate = await userOdm.getUserById(id);
+    const userToUpdate = await userOdm.getUserById(updateUserId);
     if (!userToUpdate) {
-      res.status(404).json({ error: "No existe el usuario" });
+      res.status(404).json({ error: "No existe el usuario para actualizar" });
       return;
     }
 
-    // Guardamos el usuario actualizandolo con los parametros que nos manden
-    Object.assign(userToUpdate, req.body);
+    // Guardamos el usuario actualizándolo con los parámetros que nos manden
+    const newLastName = req.user.id !== updateUserId || req.user.rol === "ADMIN" ? req.body.lastName : userToUpdate.get("lastName");
+    const newFirstName = req.user.id !== updateUserId || req.user.rol === "ADMIN" ? req.body.firstName : userToUpdate.get("firstName");
+    const newEmail = req.user.id !== updateUserId || req.user.rol === "ADMIN" ? req.body.email : userToUpdate.get("email");
+    const newPassword = req.user.id !== updateUserId || req.user.rol === "ADMIN" ? req.body.password : userToUpdate.get("password");
+    const newImage = req.user.id !== updateUserId || req.user.rol === "ADMIN" ? req.body.image : userToUpdate.get("image");
+    const newRol = req.user.rol === "ADMIN" ? req.body.rol : userToUpdate.get("rol");
+    const newTeam = (req.user.rol === "MANAGER" && req.user.team === userToUpdate.get("team")) || req.user.rol === "ADMIN" ? req.body.team : userToUpdate.get("team");
+    const userSended = { ...req.body, rol: newRol, team: newTeam, firstName: newFirstName, lastName: newLastName, email: newEmail, password: newPassword, image: newImage };
+    Object.assign(userToUpdate, userSended);
     await userToUpdate.save();
 
-    // Quitamos password del user que enviamos en la respuesta
+    // Quitamos la contraseña y el rol del usuario que enviamos en la respuesta
     const userToSend: any = userToUpdate.toObject();
     delete userToSend.password;
+    delete userToSend.rol;
     res.json(userToSend);
   } catch (error) {
     next(error);
@@ -151,6 +239,10 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
 };
 
 export const userService = {
+  getMyUser,
+  getUsersByMyTeam,
+  getPlayersByTeamId,
+  getPlayersWithoutTeam,
   getUsers,
   getUserById,
   createUser,
