@@ -9,7 +9,7 @@
  *        - password
  *        - firstName
  *        - lastName
- *        - children
+ *        - players
  *        - rol
  *      properties:
  *        email:
@@ -30,7 +30,7 @@
  *          minLength: 3
  *          maxLength: 22
  *          description: Nombre del user
- *        children:
+ *        team:
  *          type: [{type: Schema.Types.ObjectId, ref: "User"}]
  *          description: Hijos del user
  *        rol:
@@ -43,29 +43,35 @@ import mongoose, { Document } from "mongoose";
 
 import validator from "validator";
 import bcrypt from "bcrypt";
-import { Classroom, IClassroom } from "./classroom-entity";
+import { Team, ITeam } from "./team-entity";
 
 const Schema = mongoose.Schema;
 
 export enum ROL {
-  STUDENT = "STUDENT",
-  TEACHER = "TEACHER",
-  PARENT = "PARENT",
-  ADMIN = "ADMIN"
+  PLAYER = "PLAYER",
+  MANAGER = "MANAGER",
+  ADMIN = "ADMIN",
 }
 
 export interface IUserCreate {
-  email: string;
-  password: string;
   firstName: string;
   lastName: string;
-  classroom?: IClassroom;
-  children: IUser[];
+  email: string;
+  password: string;
   rol: ROL;
+  team?: ITeam;
+  image?: string;
 }
 
 const userSchema = new Schema<IUserCreate>(
   {
+    firstName: {
+      type: String,
+      trim: true,
+      minLength: [3, "Al menos tres letras para el nombre"],
+      maxLength: [22, "Nombre demasiado largo, máximo de 22 caracteres"],
+      required: true
+    },
     lastName: {
       type: String,
       trim: true,
@@ -90,32 +96,21 @@ const userSchema = new Schema<IUserCreate>(
       select: false, // Indica que no lo deseamos mostrar cuando se realicen las peticiones.
       required: true
     },
-    firstName: {
-      type: String,
-      trim: true,
-      minLength: [3, "Al menos tres letras para el nombre"],
-      maxLength: [22, "Nombre demasiado largo, máximo de 22 caracteres"],
-      required: true
-    },
-    children: {
-      type: [
-        {
-          type: Schema.Types.ObjectId,
-          ref: "User"
-        }
-      ],
-      required: true
-    },
     rol: {
       type: String,
       enum: ROL,
       required: true
     },
-    classroom: {
+    team: {
       type: Schema.Types.ObjectId,
-      ref: Classroom,
+      ref: "Team",
       required: false
-    }
+    },
+    image: {
+      type: String,
+      trim: true,
+      required: false
+    },
 
   },
   { timestamps: true } // Cada vez que se modifique un documento refleja la hora y fecha de modificación
