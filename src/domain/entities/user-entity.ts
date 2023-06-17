@@ -99,6 +99,7 @@ const userSchema = new Schema<IUserCreate>(
     rol: {
       type: String,
       enum: ROL,
+      default: ROL.PLAYER,
       required: true
     },
     team: {
