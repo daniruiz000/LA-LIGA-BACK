@@ -1,58 +1,58 @@
-import { Classroom, IClassroom, IClassroomCreate } from "../entities/team-entity";
+import { Team, ITeam, ITeamCreate } from "../entities/team-entity";
 import { Document } from "mongoose";
 
-const getAllClassrooms = async (page: number, limit: number): Promise<IClassroom[]> => {
-  return await Classroom.find()
+const getAllTeam = async (page: number, limit: number): Promise<ITeam[]> => {
+  return await Team.find()
     .limit(limit)
     .skip((page - 1) * limit);
 };
 
-const getClassroomCount = async (): Promise<number> => {
-  return await Classroom.countDocuments();
+const getTeamCount = async (): Promise<number> => {
+  return await Team.countDocuments();
 };
 
-const getClassroomById = async (id: string): Promise<Document<IClassroom> | null> => {
-  return await Classroom.findById(id);
+const getTeamById = async (id: string): Promise<Document<ITeam> | null> => {
+  return await Team.findById(id);
 };
 
-const getClassroomByName = async (name: string): Promise<Document<IClassroom>[]> => {
-  return await Classroom.find({ name: new RegExp("^" + name.toLowerCase(), "i") })
+const getTeamByName = async (name: string): Promise<Document<ITeam>[]> => {
+  return await Team.find({ name: new RegExp("^" + name.toLowerCase(), "i") })
 };
 
-const createClassroom = async (classroomData: IClassroomCreate): Promise<Document<IClassroom>> => {
-  const classroom = new Classroom(classroomData);
-  const document: Document<IClassroom> = await classroom.save() as any;
+const createTeam = async (teamData: ITeamCreate): Promise<Document<ITeam>> => {
+  const team = new Team(teamData);
+  const document: Document<ITeam> = await team.save() as any;
 
   return document;
 };
 
-const createClassroomsFromArray = async (classroomList: IClassroomCreate[]): Promise<void> => {
-  for (let i = 0; i < classroomList.length; i++) {
-    const classroom = classroomList[i];
-    await classroomOdm.createClassroom(classroom);
+const createTeamFromArray = async (teamList: ITeamCreate[]): Promise<void> => {
+  for (let i = 0; i < teamList.length; i++) {
+    const team = teamList[i];
+    await teamOdm.createTeam(team);
   }
 };
 
-const deleteClassroom = async (id: string): Promise<Document<IClassroom> | null> => {
-  return await Classroom.findByIdAndDelete(id);
+const deleteTeam = async (id: string): Promise<Document<ITeam> | null> => {
+  return await Team.findByIdAndDelete(id);
 };
 
-const deleteAllClassroom = async (): Promise<boolean> => {
-  return await Classroom.collection.drop()
+const deleteAllTeam = async (): Promise<boolean> => {
+  return await Team.collection.drop()
 };
 
-const updateClassroom = async (id: string, classroomData: IClassroomCreate): Promise<Document<IClassroom> | null> => {
-  return await Classroom.findByIdAndUpdate(id, classroomData, { new: true, runValidators: true });
+const updateTeam = async (id: string, teamData: ITeamCreate): Promise<Document<ITeam> | null> => {
+  return await Team.findByIdAndUpdate(id, teamData, { new: true, runValidators: true });
 };
 
-export const classroomOdm = {
-  getAllClassrooms,
-  getClassroomCount,
-  getClassroomById,
-  getClassroomByName,
-  createClassroom,
-  createClassroomsFromArray,
-  deleteClassroom,
-  deleteAllClassroom,
-  updateClassroom,
+export const teamOdm = {
+  getAllTeam,
+  getTeamCount,
+  getTeamById,
+  getTeamByName,
+  createTeam,
+  createTeamFromArray,
+  deleteTeam,
+  deleteAllTeam,
+  updateTeam,
 };
