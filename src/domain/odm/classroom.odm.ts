@@ -1,4 +1,4 @@
-import { Classroom, IClassroom, IClassroomCreate } from "../entities/classroom-entity";
+import { Classroom, IClassroom, IClassroomCreate } from "../entities/team-entity";
 import { Document } from "mongoose";
 
 const getAllClassrooms = async (page: number, limit: number): Promise<IClassroom[]> => {

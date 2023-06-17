@@ -43,7 +43,7 @@ import mongoose, { Document } from "mongoose";
 
 import validator from "validator";
 import bcrypt from "bcrypt";
-import { Classroom, IClassroom } from "./classroom-entity";
+import { Classroom, IClassroom } from "./team-entity";
 
 const Schema = mongoose.Schema;
 

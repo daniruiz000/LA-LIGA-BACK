@@ -1,5 +1,5 @@
 import { IUserCreate, ROL } from "../src/domain/entities/user-entity";
-import { IClassroomCreate } from "./domain/entities/classroom-entity";
+import { IClassroomCreate } from "./domain/entities/team-entity";
 
 export const userList: IUserCreate[] = [
   { firstName: "Antonio", lastName: "Perez", email: "antonio@gmail.com", password: "12345678", children: [], rol: ROL.STUDENT },
