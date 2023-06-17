@@ -31,27 +31,18 @@ export const getTeams = async (req: Request, res: Response, next: NextFunction):
 export const getTeamById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     //  ADMIN
-    const id = req.params.id;
-    if (req.user.rol !== "ADMIN") {
+    const teamId = req.params.id;
+    if (req.user.rol !== "ADMIN" || req.user.team !== teamId) {
       res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
       return;
     }
 
-    const team = await teamOdm.getTeamById(id);
+    const team = await teamOdm.getTeamById(teamId);
     if (!team) {
-      res.status(404).json({ error: "No existe el team" });
+      res.status(404).json({ error: "No existe el equipo" });
+      return;
     }
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const getMyTeam = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  try {
-    // Player and Manager
-    if (req.user.rol !== "MANAGER" && req.user.rol !== "PLAYER") {
-      res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
-    }
+    res.json(team)
   } catch (error) {
     next(error);
   }
@@ -69,6 +60,7 @@ export const getTeamByName = async (req: any, res: Response, next: NextFunction)
     if (!team) {
       res.status(404).json({ error: "No existe el equipo" });
     }
+    res.json(team)
   } catch (error) {
     next(error);
   }
@@ -113,7 +105,7 @@ export const updateTeam = async (req: Request, res: Response, next: NextFunction
   try {
     const id = req.params.id;
     // Sólo ADMIN y MANAGER
-    if (req.user.rol !== "ADMIN" && req.user.rol !== "MANAGER") {
+    if (req.user.rol !== "ADMIN" && (req.user.rol !== "MANAGER" && req.user.team !== id)) {
       res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
       return;
     }
@@ -136,7 +128,6 @@ export const updateTeam = async (req: Request, res: Response, next: NextFunction
 export const teamService = {
   getTeams,
   getTeamById,
-  getMyTeam,
   getTeamByName,
   createTeam,
   deleteTeam,
