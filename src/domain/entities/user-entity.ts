@@ -43,7 +43,7 @@ import mongoose, { Document } from "mongoose";
 
 import validator from "validator";
 import bcrypt from "bcrypt";
-import { ITeam } from "./team-entity";
+import { Team } from "./team-entity";
 
 const Schema = mongoose.Schema;
 
@@ -59,7 +59,7 @@ export interface IUserCreate {
   email: string;
   password: string;
   rol: ROL;
-  team?: ITeam;
+  team?: string;
   image?: string;
 }
 
@@ -104,7 +104,7 @@ const userSchema = new Schema<IUserCreate>(
     },
     team: {
       type: Schema.Types.ObjectId,
-      ref: "Team",
+      ref: Team,
       required: false
     },
     image: {
