@@ -1,19 +1,15 @@
-import { laLigaRelations } from "./laLigaRelations";
-import { mongoConnect, mongoDisconnect } from "../repositories/mongo-repository"; // Importamos el archivo de conexión a la BBDD
-import { resetClassrooms } from "./resetClassrooms";
-import { resetUsers } from "./resetUsers";
+import { mongoConnect, mongoDisconnect } from "../repositories/mongo-repository";
+import { resetTeams } from "./resetTeams";
 
-const seedFunction = async (): Promise<void> => {
+const seedTeams = async (): Promise<void> => {
   try {
     console.log("                                              ")
     console.log("----------------------------------------------")
-    console.log("---------------- SEED COLEGIO ----------------")
+    console.log("---------------- SEED TEAMS ----------------")
     console.log("----------------------------------------------")
     console.log("                                              ")
-    await mongoConnect()
-    await resetUsers();
-    await resetClassrooms();
-    await laLigaRelations()
+    await mongoConnect();
+    await resetTeams()
   } catch (error) {
     console.error(error);
   } finally {
@@ -26,4 +22,4 @@ const seedFunction = async (): Promise<void> => {
   }
 };
 
-void seedFunction();
+void seedTeams();

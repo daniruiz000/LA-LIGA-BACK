@@ -30,7 +30,7 @@ const createTeam = async (teamData: ITeamCreate): Promise<Document<ITeam>> => {
   return document;
 };
 
-const createTeamFromArray = async (teamList: ITeamCreate[]): Promise<void> => {
+const createTeamsFromArray = async (teamList: ITeamCreate[]): Promise<void> => {
   for (let i = 0; i < teamList.length; i++) {
     const team = teamList[i];
     await teamOdm.createTeam(team);
@@ -41,7 +41,7 @@ const deleteTeam = async (id: string): Promise<Document<ITeam> | null> => {
   return await Team.findByIdAndDelete(id);
 };
 
-const deleteAllTeam = async (): Promise<boolean> => {
+const deleteAllTeams = async (): Promise<boolean> => {
   return await Team.collection.drop()
 };
 
@@ -56,8 +56,8 @@ export const teamOdm = {
   getMyTeam,
   getTeamByName,
   createTeam,
-  createTeamFromArray,
+  createTeamsFromArray,
   deleteTeam,
-  deleteAllTeam,
+  deleteAllTeams,
   updateTeam,
 };

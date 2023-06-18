@@ -56,7 +56,7 @@ const deleteUser = async (id: string): Promise<Document<IUser> | null> => {
   return await User.findByIdAndDelete(id);
 };
 
-const deleteAllUser = async (): Promise<boolean> => {
+const deleteAllUsers = async (): Promise<boolean> => {
   return await User.collection.drop()
 };
 
@@ -94,7 +94,7 @@ export const userOdm = {
   createUser,
   createUsersFromArray,
   deleteUser,
-  deleteAllUser,
+  deleteAllUsers,
   updateUser,
   updateRoleUser,
   assignTeamToUser,
