@@ -235,7 +235,8 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
     delete userToSend.password
 
     res.status(200).json({
-      token: jwtToken
+      token: jwtToken,
+      userToSend
     });
   } catch (error) {
     next(error);
