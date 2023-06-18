@@ -7,7 +7,7 @@ import {
   NextFunction,
 } from "express";
 
-export const isAuth = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const isAuth = async (req: Request, res: Response, next: NextFunction): Promise<null> => {
   try {
     const token = req.headers.authorization?.replace("Bearer ", "");
 
@@ -21,7 +21,13 @@ export const isAuth = async (req: Request, res: Response, next: NextFunction): P
       throw new Error("No tienes autorización para realizar esta operación");
     }
     req.user = user;
+    next();
+
+    return null;
   } catch (error) {
     res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
+    return null;
   }
 };
+
+module.exports = { isAuth };

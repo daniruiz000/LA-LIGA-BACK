@@ -32,7 +32,7 @@ export const getTeamById = async (req: Request, res: Response, next: NextFunctio
   try {
     //  ADMIN
     const teamId = req.params.id;
-    if (req.user.rol !== "ADMIN" || req.user.team !== teamId) {
+    if (req.user.rol !== "ADMIN") {
       res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
       return;
     }

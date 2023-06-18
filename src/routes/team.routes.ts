@@ -16,16 +16,16 @@ teamRouter.put("/:id", isAuth, teamService.updateTeam);
 /**
  * @swagger
  * tags:
- *   name: Classroom
- *   description: API for managing classrooms
+ *   name: Teams
+ *   description: API for managing teams
  */
 
 /**
  * @swagger
- * /classroom:
+ * /team:
  *   get:
- *     summary: Get all classrooms
- *     tags: [Classroom]
+ *     summary: Get all teams
+ *     tags: [Teams]
  *     parameters:
  *       - in: query
  *         name: page
@@ -39,7 +39,7 @@ teamRouter.put("/:id", isAuth, teamService.updateTeam);
  *         description: The number of items to return
  *     responses:
  *       200:
- *         description: The list of classrooms
+ *         description: The list of teams
  *         content:
  *           application/json:
  *             schema:
@@ -48,7 +48,7 @@ teamRouter.put("/:id", isAuth, teamService.updateTeam);
  *                 data:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/Classroom'
+ *                     $ref: '#/components/schemas/Teams'
  *                   pagination:
  *                     $ref: '#/components/schemas/Pagination'
  *       400:
@@ -61,26 +61,26 @@ teamRouter.put("/:id", isAuth, teamService.updateTeam);
 
 /**
  * @swagger
- * /classroom/{id}:
+ * /team/{id}:
  *   get:
- *     summary: Get an classroom by ID
- *     tags: [Classroom]
+ *     summary: Get an team by ID
+ *     tags: [Teams]
  *     parameters:
  *       - in: path
  *         name: id
  *         schema:
  *           type: string
  *         required: true
- *         description: The classroom ID
+ *         description: The team ID
  *     responses:
  *       200:
- *         description: The classroom info
+ *         description: The team info
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Classroom'
+ *               $ref: '#/components/schemas/Teams'
  *       404:
- *         description: Classroom not found
+ *         description: Teams not found
  *         content:
  *           application/json:
  *             schema:
@@ -89,26 +89,26 @@ teamRouter.put("/:id", isAuth, teamService.updateTeam);
 
 /**
  * @swagger
- * /classroom/name/{name}:
+ * /team/name/{name}:
  *   get:
- *     summary: Get an classroom by name
- *     tags: [Classroom]
+ *     summary: Get an team by name
+ *     tags: [Teams]
  *     parameters:
  *       - in: path
  *         name: name
  *         schema:
  *           type: string
  *         required: true
- *         description: The classroom name
+ *         description: The team name
  *     responses:
  *       200:
- *         description: The classroom info
+ *         description: The team info
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Classroom'
+ *               $ref: '#/components/schemas/Teams'
  *       404:
- *         description: Classroom not found
+ *         description: Teams not found
  *         content:
  *           application/json:
  *             schema:
@@ -117,47 +117,47 @@ teamRouter.put("/:id", isAuth, teamService.updateTeam);
 
 /**
  * @swagger
- * /classroom:
+ * /team:
  *   post:
- *     summary: Create a new classroom
- *     tags: [Classroom]
+ *     summary: Create a new team
+ *     tags: [Teams]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Classroom'
+ *             $ref: '#/components/schemas/Teams'
  *     responses:
  *       201:
- *         description: The classroom was created
+ *         description: The team was created
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Classroom'
+ *               $ref: '#/components/schemas/Teams'
  */
 
 /**
  * @swagger
- * /classroom/{id}:
+ * /team/{id}:
  *   delete:
- *     summary: Delete an classroom by ID
- *     tags: [Classroom]
+ *     summary: Delete an team by ID
+ *     tags: [Teams]
  *     parameters:
  *       - in: path
  *         name: id
  *         schema:
  *           type: string
  *         required: true
- *         description: The classroom ID
+ *         description: The team ID
  *     responses:
  *       200:
- *         description: The classroom was successfully deleted
+ *         description: The team was successfully deleted
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Classroom'
+ *               $ref: '#/components/schemas/Teams'
  *       404:
- *         description: The classroom was not found
+ *         description: The team was not found
  *         content:
  *           application/json:
  *             schema:
@@ -166,30 +166,30 @@ teamRouter.put("/:id", isAuth, teamService.updateTeam);
 
 /**
  * @swagger
- * /classroom/{id}:
+ * /team/{id}:
  *   put:
- *     summary: Update an classroom by ID
- *     tags: [Classroom]
+ *     summary: Update an team by ID
+ *     tags: [Teams]
  *     parameters:
  *       - in: path
  *         name: id
  *         schema:
  *           type: string
  *         required: true
- *         description: The classroom ID
+ *         description: The team ID
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Classroom'
+ *             $ref: '#/components/schemas/Teams'
  *     responses:
  *       200:
- *         description: The classroom was successfully updated
+ *         description: The team was successfully updated
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Classroom'
+ *               $ref: '#/components/schemas/Teams'
  *       400:
  *         description: Some parameters are missing or invalid
  *         content:
@@ -197,7 +197,7 @@ teamRouter.put("/:id", isAuth, teamService.updateTeam);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  *       404:
- *         description: The classroom was not found
+ *         description: The team was not found
  *         content:
  *           application/json:
  *             schema:
@@ -206,10 +206,10 @@ teamRouter.put("/:id", isAuth, teamService.updateTeam);
 
 /**
  * @swagger
- * /classroom/login:
+ * /team/login:
  *   post:
- *     summary: Login as an classroom
- *     tags: [Classroom]
+ *     summary: Login as an team
+ *     tags: [Teams]
  *     requestBody:
  *       required: true
  *       content:
@@ -222,7 +222,7 @@ teamRouter.put("/:id", isAuth, teamService.updateTeam);
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Classroom'
+ *               $ref: '#/components/schemas/Teams'
  *       401:
  *         description: Invalid credentials
  *         content:
@@ -233,10 +233,10 @@ teamRouter.put("/:id", isAuth, teamService.updateTeam);
 
 /**
  * @swagger
- * /classroom/image-upload:
+ * /team/image-upload:
  *   post:
- *     summary: Upload a image for a classroom
- *     tags: [Classroom]
+ *     summary: Upload a image for a team
+ *     tags: [Teams]
  *     consumes:
  *       - multipart/form-data
  *     parameters:
@@ -245,12 +245,12 @@ teamRouter.put("/:id", isAuth, teamService.updateTeam);
  *         type: file
  *         description: The file to upload.
  *       - in: formData
- *         name: classroomId
+ *         name: teamId
  *         type: string
- *         description: The id of the classroom
+ *         description: The id of the team
  *     responses:
  *       200:
  *         description: The image was uploaded successfully
  *       404:
- *         description: The classroom was not found
+ *         description: The team was not found
  */

@@ -10,6 +10,7 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction):
     const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
 
     // ADMIN
+    console.log(req)
     if (req.user.rol !== "ADMIN") {
       res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
       return;
