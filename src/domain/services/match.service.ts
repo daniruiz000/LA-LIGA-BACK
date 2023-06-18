@@ -22,45 +22,27 @@ export const getMatchs = async (req: Request, res: Response, next: NextFunction)
   }
 };
 
-export const getTeamById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const getMatchById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    //  ADMIN
-    const teamId = req.params.id;
-    if (req.user.rol !== "ADMIN" || req.user.team !== teamId) {
+    //   is auth
+    const matchId = req.params.id;
+    if (!req.user) {
       res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
       return;
     }
 
-    const team = await matchOdm.getTeamById(teamId);
-    if (!team) {
+    const match = await matchOdm.getMatchById(matchId);
+    if (!match) {
       res.status(404).json({ error: "No existe el equipo" });
       return;
     }
-    res.json(team)
+    res.json(match)
   } catch (error) {
     next(error);
   }
 };
 
-export const getTeamByName = async (req: any, res: Response, next: NextFunction): Promise<void> => {
-  const name = req.params.name;
-
-  try {
-    if (req.user.rol !== "ADMIN") {
-      res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
-      return;
-    }
-    const team = await matchOdm.getTeamByName(name);
-    if (!team) {
-      res.status(404).json({ error: "No existe el equipo" });
-    }
-    res.json(team)
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const createTeam = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const createMatch = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     // Sólo ADMIN
     if (req.user.rol !== "ADMIN") {
@@ -68,14 +50,14 @@ export const createTeam = async (req: Request, res: Response, next: NextFunction
       return;
     }
 
-    const createdTeam = await matchOdm.createTeam(req.body);
-    res.status(201).json(createdTeam);
+    const createdMatch = await matchOdm.createMatch(req.body);
+    res.status(201).json(createdMatch);
   } catch (error) {
     next(error);
   }
 };
 
-export const deleteTeam = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const deleteMatch = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     // Sólo ADMIN
     const id = req.params.id;
@@ -84,46 +66,45 @@ export const deleteTeam = async (req: Request, res: Response, next: NextFunction
       return;
     }
 
-    const teamDeleted = await matchOdm.deleteTeam(id);
-    if (!teamDeleted) {
+    const matchDeleted = await matchOdm.deleteMatch(id);
+    if (!matchDeleted) {
       res.status(404).json({ error: "No existe el equipo" });
       return;
     }
-    res.json(teamDeleted);
+    res.json(matchDeleted);
   } catch (error) {
     next(error);
   }
 };
 
-export const updateTeam = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const updateMatch = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const id = req.params.id;
-    // Sólo ADMIN y MANAGER
-    if (req.user.rol !== "ADMIN" && (req.user.rol !== "MANAGER" && req.user.team !== id)) {
+    // Sólo ADMIN
+    if (req.user.rol !== "ADMIN") {
       res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
       return;
     }
 
-    const teamToUpdate = await matchOdm.getTeamById(id);
-    if (!teamToUpdate) {
+    const matchToUpdate = await matchOdm.getMatchById(id);
+    if (!matchToUpdate) {
       res.status(404).json({ error: "No existe el equipo" });
       return;
     }
 
     // Guardamos el equipo actualizandolo con los parametros que nos manden
-    Object.assign(teamToUpdate, req.body);
-    const teamToSend = await teamToUpdate.save()
-    res.json(teamToSend);
+    Object.assign(matchToUpdate, req.body);
+    const matchToSend = await matchToUpdate.save()
+    res.json(matchToSend);
   } catch (error) {
     next(error);
   }
 };
 
-export const teamService = {
-  getAllMatchs,
-  getTeamById,
-  getTeamByName,
-  createTeam,
-  deleteTeam,
-  updateTeam,
+export const matchService = {
+  getMatchs,
+  getMatchById,
+  createMatch,
+  deleteMatch,
+  updateMatch,
 };

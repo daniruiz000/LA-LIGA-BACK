@@ -4,7 +4,7 @@ import { Document } from "mongoose";
 const getAllMatchs = async (page: number, limit: number): Promise<IMatch[]> => {
   return await Match.find()
     .limit(limit)
-    .skip((page - 1) * limit);
+    .skip((page - 1) * limit).populate(["localTeam", "visitorTeam"]);
 };
 
 const getMatchCount = async (): Promise<number> => {
@@ -12,7 +12,7 @@ const getMatchCount = async (): Promise<number> => {
 };
 
 const getMatchById = async (id: string): Promise<Document<IMatch> | null> => {
-  return await Match.findById(id).populate("localTeam, visitorTeam, goalsLocal, goalsVisitor");
+  return await Match.findById(id).populate(["localTeam", "visitorTeam"]);
 };
 
 const createMatch = async (matchData: IMatchCreate): Promise<Document<IMatch>> => {
