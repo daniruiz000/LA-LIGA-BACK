@@ -1,25 +1,19 @@
 import { Request, Response, NextFunction } from "express";
-import { teamOdm } from "../odm/team.odm";
+import { matchOdm } from "../odm/match.odm";
 
-export const getTeams = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const getMatchs = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const page = req.query.page ? parseInt(req.query.page as string) : 1;
     const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
 
-    // ADMIN
-    if (req.user.rol !== "ADMIN") {
-      res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
-      return;
-    }
-
-    const team = await teamOdm.getAllTeams(page, limit);
-    const totalElements = await teamOdm.getTeamCount();
+    const match = await matchOdm.getAllMatchs(page, limit);
+    const totalElements = await matchOdm.getMatchCount();
 
     const response = {
       totalItems: totalElements,
       totalPages: Math.ceil(totalElements / limit),
       currentPage: page,
-      data: team,
+      data: match,
     };
 
     res.json(response);
@@ -37,7 +31,7 @@ export const getTeamById = async (req: Request, res: Response, next: NextFunctio
       return;
     }
 
-    const team = await teamOdm.getTeamById(teamId);
+    const team = await matchOdm.getTeamById(teamId);
     if (!team) {
       res.status(404).json({ error: "No existe el equipo" });
       return;
@@ -56,7 +50,7 @@ export const getTeamByName = async (req: any, res: Response, next: NextFunction)
       res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
       return;
     }
-    const team = await teamOdm.getTeamByName(name);
+    const team = await matchOdm.getTeamByName(name);
     if (!team) {
       res.status(404).json({ error: "No existe el equipo" });
     }
@@ -74,7 +68,7 @@ export const createTeam = async (req: Request, res: Response, next: NextFunction
       return;
     }
 
-    const createdTeam = await teamOdm.createTeam(req.body);
+    const createdTeam = await matchOdm.createTeam(req.body);
     res.status(201).json(createdTeam);
   } catch (error) {
     next(error);
@@ -90,7 +84,7 @@ export const deleteTeam = async (req: Request, res: Response, next: NextFunction
       return;
     }
 
-    const teamDeleted = await teamOdm.deleteTeam(id);
+    const teamDeleted = await matchOdm.deleteTeam(id);
     if (!teamDeleted) {
       res.status(404).json({ error: "No existe el equipo" });
       return;
@@ -110,7 +104,7 @@ export const updateTeam = async (req: Request, res: Response, next: NextFunction
       return;
     }
 
-    const teamToUpdate = await teamOdm.getTeamById(id);
+    const teamToUpdate = await matchOdm.getTeamById(id);
     if (!teamToUpdate) {
       res.status(404).json({ error: "No existe el equipo" });
       return;
@@ -126,7 +120,7 @@ export const updateTeam = async (req: Request, res: Response, next: NextFunction
 };
 
 export const teamService = {
-  getTeams,
+  getAllMatchs,
   getTeamById,
   getTeamByName,
   createTeam,
