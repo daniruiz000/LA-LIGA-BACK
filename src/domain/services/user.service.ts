@@ -35,7 +35,12 @@ export const getMyUser = async (req: Request, res: Response, next: NextFunction)
   try {
     // ADMIN / EL PROPIO USUARIO A SÍ MISMO (CUALQUIER USUARIO LOGADO)
     const user = req.user;
-    res.json(user);
+    const playersOnMyTeam = await userOdm.getPlayersByIdTeam(req.user.id as string)
+    const response = {
+      user,
+      playersOnMyTeam
+    }
+    res.json(response);
   } catch (error) {
     next(error);
   }
@@ -169,7 +174,7 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
     const updateUserId = req.params.id;
 
     // Solo ADMIN o el propio usuario a sí mismo (cualquier usuario logado) / MANAGER A LOS DE SU EQUIPO
-    if (req.user.rol !== "ADMIN" && req.user.id !== updateUserId && req.user.rol !== "MANAGER") {
+    if (req.user.rol !== "ADMIN" && (req.user.id !== updateUserId && req.user.rol !== "MANAGER")) {
       res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
       return;
     }
@@ -230,8 +235,7 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
     delete userToSend.password
 
     res.status(200).json({
-      token: jwtToken,
-      user: userToSend,
+      token: jwtToken
     });
   } catch (error) {
     next(error);

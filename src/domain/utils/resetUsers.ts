@@ -8,11 +8,13 @@ export const resetUsers = async (): Promise<void> => {
     const playersWithTeam = 50
     await userOdm.deleteAllUsers();
     console.log("Usuarios borrados");
+
     const admins = userList.filter(user => user.rol === ROL.ADMIN);
     const managers = userList.filter(user => user.rol === ROL.MANAGER);
     const players = userList.filter(user => user.rol === ROL.PLAYER);
     const teams = await Team.find();
     const playersPerTeam = playersWithTeam / teams.length
+
     for (let i = 0; i < playersWithTeam; i++) {
       const player: IUserCreate = players[i];
       player.team = teams[i % teams.length].id;
@@ -26,7 +28,14 @@ export const resetUsers = async (): Promise<void> => {
       await userOdm.createUser(manager);
     }
     console.log("Managers creados y asignados a equipos correctamente");
-    console.log("Usuarios creados y asignados a equipos correctamente");
+
+    for (let i = 0; i < admins.length; i++) {
+      const admin: IUserCreate = admins[i];
+      await userOdm.createUser(admin);
+    }
+    console.log("Admins creados correctamente");
+
+    console.log("Usuarios y relaciones con equipos creados correctamente");
     console.log({
       users: userList.length,
       players: players.length,
@@ -40,4 +49,3 @@ export const resetUsers = async (): Promise<void> => {
     console.error(error);
   }
 };
-
