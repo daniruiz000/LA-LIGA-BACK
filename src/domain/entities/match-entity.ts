@@ -53,7 +53,7 @@ export interface IMatchCreate {
   goalsLocal?: IUser[];
   goalsVisitor?: IUser[];
   played: boolean;
-  matchDay: number;
+  round: number;
 }
 
 const MatchSchema = new Schema<IMatchCreate>(
@@ -88,7 +88,7 @@ const MatchSchema = new Schema<IMatchCreate>(
       type: Boolean,
       default: false
     },
-    matchDay: {
+    round: {
       type: Number,
       min: [1, "Minimo primera jornada"],
     }
