@@ -1,0 +1,312 @@
+{
+	"info": {
+		"_postman_id": "92071b9e-458e-4fd4-b1e2-d9a76abe01bf",
+		"name": "LA LIGA",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27142612",
+		"_collection_link": "https://solar-shadow-292261.postman.co/workspace/Team-Workspace~a177c5f4-a623-49dd-8efe-2f6293986675/collection/27142612-92071b9e-458e-4fd4-b1e2-d9a76abe01bf?action=share&creator=27142612&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Teams",
+			"item": [
+				{
+					"name": "Get Teams",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OGVlYzEwYWJiNGFkMDRlODQ0YWMwMSIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiaWF0IjoxNjg3MDkxNjgwLCJleHAiOjE2ODcxNzgwODB9.gq63oer9OujB6ICblqiCnGGc6CDbsJJQTTPicOc9_xE",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/teams?page=1&limit=10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"teams"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Teams by id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OGVlYzEwYWJiNGFkMDRlODQ0YWMwMSIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiaWF0IjoxNjg3MDkxNjgwLCJleHAiOjE2ODcxNzgwODB9.gq63oer9OujB6ICblqiCnGGc6CDbsJJQTTPicOc9_xE",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/teams/648ee4940ccffccb2979367f",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"teams",
+								"648ee4940ccffccb2979367f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Teams by name",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OGVlYzEwYWJiNGFkMDRlODQ0YWMwMSIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiaWF0IjoxNjg3MDkxNjgwLCJleHAiOjE2ODcxNzgwODB9.gq63oer9OujB6ICblqiCnGGc6CDbsJJQTTPicOc9_xE",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/teams/name/Real Madrid CF",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"teams",
+								"name",
+								"Real Madrid CF"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Teams",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OGVlYzEwYWJiNGFkMDRlODQ0YWMwMSIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiaWF0IjoxNjg3MDkxNjgwLCJleHAiOjE2ODcxNzgwODB9.gq63oer9OujB6ICblqiCnGGc6CDbsJJQTTPicOc9_xE",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Villarreal CF\",\r\n    \"initials\": \"VLL\",\r\n    \"image\": \"https://assets.laliga.com/assets/2019/06/07/small/villarreal.png\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/teams",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"teams"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Teams by ID",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OGVlYzEwYWJiNGFkMDRlODQ0YWMwMSIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiaWF0IjoxNjg3MDkxNjgwLCJleHAiOjE2ODcxNzgwODB9.gq63oer9OujB6ICblqiCnGGc6CDbsJJQTTPicOc9_xE",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/teams/648efa23a439c069d7555689",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"teams",
+								"648efa23a439c069d7555689"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Teams by ID",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OGVlYzEwYWJiNGFkMDRlODQ0YWMwMSIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiaWF0IjoxNjg3MDkxNjgwLCJleHAiOjE2ODcxNzgwODB9.gq63oer9OujB6ICblqiCnGGc6CDbsJJQTTPicOc9_xE",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"_id\": \"648ee4940ccffccb2979367f\",\r\n    \"name\": \"Real Madrid CF\",\r\n    \"initials\": \"RCF\",\r\n    \"image\": \"https://assets.laliga.com/assets/2019/06/07/small/real-madrid.png\",\r\n    \"createdAt\": \"2023-06-18T11:03:48.716Z\",\r\n    \"updatedAt\": \"2023-06-18T11:03:48.716Z\",\r\n    \"__v\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/teams/648ee4940ccffccb2979367f?",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"teams",
+								"648ee4940ccffccb2979367f"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OGVlYzEwYWJiNGFkMDRlODQ0YWMwMSIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiaWF0IjoxNjg3MDkxNjgwLCJleHAiOjE2ODcxNzgwODB9.gq63oer9OujB6ICblqiCnGGc6CDbsJJQTTPicOc9_xE",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/user?page=1&limit=10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"admin@gmail.com\",\r\n    \"password\": \"55555555\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		}
+	]
+}
