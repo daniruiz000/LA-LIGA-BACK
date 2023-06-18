@@ -65,7 +65,7 @@ export const userList = [
   { firstName: "Ana ", lastName: "Obregón", email: "ana@gmail.com", password: "33333333", rol: ROL.MANAGER, image: "https://randomuser.me/api/portraits/men/31.jpg" },
   { firstName: "Francisco ", lastName: "Bueno", email: "frank@gmail.com", password: "44444444", rol: ROL.MANAGER, image: "https://randomuser.me/api/portraits/men/32.jpg" },
   { firstName: "Toni ", lastName: "Moreno", email: "toni@gmail.com", password: "55555555", rol: ROL.MANAGER, image: "https://randomuser.me/api/portraits/men/33.jpg" },
-  { firstName: "Antonio", lastName: "Alcaráz", email: "admin@gmail.com", password: "55555555", rol: ROL.ADMIN, image: "https://randomuser.me/api/portraits/men/34.jpg" },
+  { firstName: "Antonio", lastName: "Alcaráz", email: "admin@gmail.com", password: "55555556", rol: ROL.ADMIN, image: "https://randomuser.me/api/portraits/men/34.jpg" },
 ];
 
 export const teamList = [
