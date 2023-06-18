@@ -32,8 +32,8 @@ const getManagerByIdTeam = async (teamId: string): Promise<IUser[]> => {
   return players
 };
 
-const getUserByEmailWithPassword = async (email: string): Promise<Document<IUser> | null> => {
-  const user: Document<IUser> | null = await User.findOne({ email }).select("+password") as any;
+const getUserByEmailWithPassword = async (emailPassed: string): Promise<Document<IUser> | null> => {
+  const user: Document<IUser> | null = await User.findOne({ email: emailPassed }).select("+password") as any;
   return user;
 };
 

@@ -16,7 +16,7 @@ export const isAuth = async (req: Request, res: Response, next: NextFunction): P
     }
 
     const decodedInfo = verifyToken(token);
-    const user = await User.findOne({ email: decodedInfo.email }).select("+password");
+    const user = await User.findOne({ email: decodedInfo.email }).select("+password").populate("team");
     if (!user) {
       throw new Error("No tienes autorización para realizar esta operación");
     }

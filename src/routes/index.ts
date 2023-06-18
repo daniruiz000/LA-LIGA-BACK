@@ -5,6 +5,7 @@ import express, { type Response, type Request } from "express";
 
 import { userRouter } from "./user.routes";
 import { teamRouter } from "./team.routes";
+import { matchRouter } from "./match.routes";
 
 import { infoReq } from "../server/infoReq.middleware";
 import { connect } from "../server/connect.middleware";
@@ -35,7 +36,8 @@ export const configureRoutes = (app: any): any => {
 
   // Usamos las rutas
   app.use("/user", infoReq, connect, userRouter);
-  app.use("/teams", infoReq, connect, teamRouter);
+  app.use("/team", infoReq, connect, teamRouter);
+  app.use("/match", infoReq, connect, matchRouter);
   app.use("/public", infoReq, connect, express.static("public"));
   app.use("/", infoReq, routerHome);
 
