@@ -9,7 +9,7 @@
     "lint:fix": "eslint --fix .",
     "start": "ts-node-dev --inspect -- ./src/index.ts",
     "seed:users": "ts-node-dev ./src/domain/utils/users.seed.ts",
-    "seed:classrooms": "ts-node-dev ./src/domain/utils/classrooms.seed.ts",
+    "seed:teams": "ts-node-dev ./src/domain/utils/teams.seed.ts",
     "seed:all": "ts-node-dev ./src/domain/utils/colegio.seed.ts",
     "start:pro": "npm run build && node ./dist/index.js",
     "build": "tsc",

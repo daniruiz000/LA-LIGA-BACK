@@ -1,15 +1,17 @@
-import { mongoConnect, mongoDisconnect } from "../repositories/mongo-repository";
-import { resetUsers } from "./resetUsers";
+import { mongoConnect, mongoDisconnect } from "../repositories/mongo-repository"; // Importamos el archivo de conexión a la BBDD
+import { laLigaRelations } from "./laLigaRelations";
+import { resetTeams } from "./resetTeams";
 
-const seedUsers = async (): Promise<void> => {
+const seedLaLiga = async (): Promise<void> => {
   try {
     console.log("                                              ")
     console.log("----------------------------------------------")
-    console.log("---------------- SEED USERS ----------------")
+    console.log("---------------- SEED LALIGA ----------------")
     console.log("----------------------------------------------")
     console.log("                                              ")
     await mongoConnect();
-    await resetUsers()
+    await resetTeams()
+    await laLigaRelations();
   } catch (error) {
     console.error(error);
   } finally {
@@ -22,4 +24,4 @@ const seedUsers = async (): Promise<void> => {
   }
 };
 
-void seedUsers();
+void seedLaLiga();
