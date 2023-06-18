@@ -249,22 +249,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}/user?page=1&limit=10",
+							"raw": "{{base_url}}/user/myuser",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"user"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": "1"
-								},
-								{
-									"key": "limit",
-									"value": "10"
-								}
+								"user",
+								"myuser"
 							]
 						}
 					},
@@ -282,22 +273,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}/user?page=1&limit=10",
+							"raw": "{{base_url}}/user/648f0d5883b1528e3af83472",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"user"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": "1"
-								},
-								{
-									"key": "limit",
-									"value": "10"
-								}
+								"user",
+								"648f0d5883b1528e3af83472"
 							]
 						}
 					},
@@ -310,27 +292,18 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OGVlYzEwYWJiNGFkMDRlODQ0YWMwMSIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiaWF0IjoxNjg3MDkxNjgwLCJleHAiOjE2ODcxNzgwODB9.gq63oer9OujB6ICblqiCnGGc6CDbsJJQTTPicOc9_xE",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OGYwZDU4ODNiMTUyOGUzYWY4MzQ3MCIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiaWF0IjoxNjg3MDk2NjkwLCJleHAiOjE2ODcxODMwOTB9.H71CL0_6adU9en2eNj0Nk4g9Y-6xdDOP97xV8-5__Qo",
 								"type": "text"
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}/user?page=1&limit=10",
+							"raw": "{{base_url}}/user/no-team",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"user"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": "1"
-								},
-								{
-									"key": "limit",
-									"value": "10"
-								}
+								"user",
+								"no-team"
 							]
 						}
 					},
@@ -343,26 +316,23 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OGVlYzEwYWJiNGFkMDRlODQ0YWMwMSIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiaWF0IjoxNjg3MDkxNjgwLCJleHAiOjE2ODcxNzgwODB9.gq63oer9OujB6ICblqiCnGGc6CDbsJJQTTPicOc9_xE",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OGYwZDU4ODNiMTUyOGUzYWY4MzQ3MiIsImVtYWlsIjoiYW50b25pb0BnbWFpbC5jb20iLCJpYXQiOjE2ODcwOTc0NjEsImV4cCI6MTY4NzE4Mzg2MX0.gTecXl2t85G25RWz-4B4BbncCe3fhISmAYWG_5S2VRI",
 								"type": "text"
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}/user?page=1&limit=10",
+							"raw": "{{base_url}}/user/myteam-players?",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"user"
+								"user",
+								"myteam-players"
 							],
 							"query": [
 								{
-									"key": "page",
-									"value": "1"
-								},
-								{
-									"key": "limit",
-									"value": "10"
+									"key": "",
+									"value": null
 								}
 							]
 						}
@@ -382,7 +352,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Villarreal CF\",\r\n    \"initials\": \"VLL\",\r\n    \"image\": \"https://assets.laliga.com/assets/2019/06/07/small/villarreal.png\"\r\n}",
+							"raw": "    {   \"firstName\": \"Antonio\",\r\n            \"lastName\": \"Fernandez\",\r\n            \"email\": \"prueba@gmail.com\",\r\n            \"password\": \"prueba123\",\r\n            \"rol\": \"PLAYER\",\r\n            \"image\": \"https://randomuser.me/api/portraits/men/85.jpg\"\r\n        }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -390,12 +360,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/teams",
+							"raw": "{{base_url}}/user",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"teams"
+								"user"
 							],
 							"query": [
 								{
@@ -425,13 +395,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}/teams/648efa23a439c069d7555689",
+							"raw": "{{base_url}}/user/648f3007578dcca67875cb4e",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"teams",
-								"648efa23a439c069d7555689"
+								"user",
+								"648f3007578dcca67875cb4e"
 							]
 						}
 					},
@@ -450,7 +420,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"_id\": \"648ee4940ccffccb2979367f\",\r\n    \"name\": \"Real Madrid CF\",\r\n    \"initials\": \"RCF\",\r\n    \"image\": \"https://assets.laliga.com/assets/2019/06/07/small/real-madrid.png\",\r\n    \"createdAt\": \"2023-06-18T11:03:48.716Z\",\r\n    \"updatedAt\": \"2023-06-18T11:03:48.716Z\",\r\n    \"__v\": 0\r\n}",
+							"raw": "   {\r\n            \"firstName\": \"Antonio\",\r\n            \"lastName\": \"Perez\",\r\n            \"email\": \"antonio3@gmail.com\",\r\n            \"rol\": \"PLAYER\",\r\n            \"team\": \"648ee4940ccffccb2979367f\",\r\n            \"image\": \"https://randomuser.me/api/portraits/men/50.jpg\"\r\n        }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -458,19 +428,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/teams/648ee4940ccffccb2979367f?",
+							"raw": "{{base_url}}/user/648f0d5883b1528e3af83472",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"teams",
-								"648ee4940ccffccb2979367f"
-							],
-							"query": [
-								{
-									"key": "",
-									"value": null
-								}
+								"user",
+								"648f0d5883b1528e3af83472"
 							]
 						}
 					},
