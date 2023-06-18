@@ -10,7 +10,6 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction):
     const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
 
     // ADMIN
-    console.log(req)
     if (req.user.rol !== "ADMIN") {
       res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
       return;
@@ -45,7 +44,7 @@ export const getMyUser = async (req: Request, res: Response, next: NextFunction)
 export const getPlayersWithoutTeam = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     //  ADMIN / MANAGER
-    if (req.user.rol !== "ADMIN" || req.user.rol !== "MANAGER") {
+    if (req.user.rol !== "ADMIN" && req.user.rol !== "MANAGER") {
       res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
       return;
     }
@@ -63,7 +62,7 @@ export const getPlayersWithoutTeam = async (req: Request, res: Response, next: N
 export const getUsersByMyTeam = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     // MANAGER
-    if (req.user.rol !== "MANAGER" || req.user.rol !== "PLAYER") {
+    if (req.user.rol !== "PLAYER" && req.user.rol !== "MANAGER") {
       res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
       return;
     }
@@ -149,7 +148,7 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
   try {
     // ADMIN / EL PROPIO USUARIO A SÍ MISMO (CUALQUIER USUARIO LOGADO)
     const deletedUserId = req.params.id;
-    if (req.user.rol !== "ADMIN" || req.user.id !== deletedUserId) {
+    if (req.user.rol !== "ADMIN" && req.user.id !== deletedUserId) {
       res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
       return;
     }
@@ -170,7 +169,7 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
     const updateUserId = req.params.id;
 
     // Solo ADMIN o el propio usuario a sí mismo (cualquier usuario logado) / MANAGER A LOS DE SU EQUIPO
-    if (req.user.rol !== "ADMIN" || req.user.id !== updateUserId || req.user.rol !== "MANAGER") {
+    if (req.user.rol !== "ADMIN" && req.user.id !== updateUserId && req.user.rol !== "MANAGER") {
       res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
       return;
     }
