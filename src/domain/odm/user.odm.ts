@@ -23,6 +23,7 @@ const getPlayersByIdTeam = async (teamId: string): Promise<IUser[]> => {
 
 const getPlayersWithoutTeam = async (): Promise<IUser[]> => {
   const players: IUser[] | null = await User.find({ team: undefined });
+  console.log(players)
   return players
 };
 
