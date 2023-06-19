@@ -88,7 +88,7 @@ export const generateLeague = async (): Promise<void> => {
     const matchSort = matches.sort((a, b) => a.round - b.round)
     for (let i = 0; i < matchSort.length; i++) {
       const match = matches[i];
-      console.log(`Jornada ${match.round} Partido: ${match.localTeam.name}/ ${match.visitorTeam.name}`)
+      console.log(`Jornada ${match.round} Partido: ${match.localTeam.name}/ ${match.visitorTeam.name} Fecha ${match.date.getDate()}/${match.date.getMonth()}`)
     }
     console.log("Partidos generados correctamente");
     console.log({
