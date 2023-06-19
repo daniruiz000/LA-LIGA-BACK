@@ -34,8 +34,8 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction):
 export const getMyUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     // ADMIN / EL PROPIO USUARIO A SÍ MISMO (CUALQUIER USUARIO LOGADO)
-    const user = req.user;
-    const playersOnMyTeam = await userOdm.getPlayersByIdTeam(req.user.id as string)
+    const user = await userOdm.getUserById(req.user.id as string);
+    const playersOnMyTeam = await userOdm.getPlayersByIdTeam(req.user.team as string)
     const response = {
       user,
       playersOnMyTeam
@@ -186,16 +186,23 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
     }
 
     // Guardamos el usuario actualizándolo con los parámetros que nos manden
-    const newLastName = req.user.id !== updateUserId || req.user.rol === "ADMIN" ? req.body.lastName : userToUpdate.get("lastName");
-    const newFirstName = req.user.id !== updateUserId || req.user.rol === "ADMIN" ? req.body.firstName : userToUpdate.get("firstName");
-    const newEmail = req.user.id !== updateUserId || req.user.rol === "ADMIN" ? req.body.email : userToUpdate.get("email");
-    const newPassword = req.user.id !== updateUserId || req.user.rol === "ADMIN" ? req.body.password : userToUpdate.get("password");
-    const newImage = req.user.id !== updateUserId || req.user.rol === "ADMIN" ? req.body.image : userToUpdate.get("image");
+    const newLastName = (req.user.id === updateUserId || req.user.rol === "ADMIN") && req.body.lastName ? req.body.lastName : userToUpdate.get("lastName");
+    const newFirstName = (req.user.id === updateUserId || req.user.rol === "ADMIN") && req.body.firstName ? req.body.firstName : userToUpdate.get("firstName");
+    const newEmail = (req.user.id === updateUserId || req.user.rol === "ADMIN") && req.body.email ? req.body.email : userToUpdate.get("email");
+    const newPassword = req.body.password
+    const newImage = (req.user.id === updateUserId || req.user.rol === "ADMIN") && req.body.image ? req.body.image : userToUpdate.get("image");
     const newRol = req.user.rol === "ADMIN" ? req.body.rol : userToUpdate.get("rol");
     const newTeam = (req.user.rol === "MANAGER" && req.user.team === userToUpdate.get("team")) || req.user.rol === "ADMIN" ? req.body.team : userToUpdate.get("team");
-    const userSended = { ...req.body, rol: newRol, team: newTeam, firstName: newFirstName, lastName: newLastName, email: newEmail, password: newPassword, image: newImage };
-    Object.assign(userToUpdate, userSended);
-    await userToUpdate.save();
+
+    if (req.body.password) {
+      const userSended = { ...req.body, rol: newRol, team: newTeam, firstName: newFirstName, lastName: newLastName, email: newEmail, password: newPassword, image: newImage };
+      Object.assign(userToUpdate, userSended);
+      await userToUpdate.save();
+    } else {
+      const userSended = { ...req.body, rol: newRol, team: newTeam, firstName: newFirstName, lastName: newLastName, email: newEmail, image: newImage };
+      Object.assign(userToUpdate, userSended);
+      await userToUpdate.save();
+    }
 
     // Quitamos la contraseña y el rol del usuario que enviamos en la respuesta
     const userToSend: any = userToUpdate.toObject();

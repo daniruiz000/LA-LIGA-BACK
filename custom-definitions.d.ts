@@ -4,8 +4,6 @@
 declare namespace Express {
   export interface Request {
     user: {
-      firstName: string;
-      lastName: string;
       rol: ROL;
       id?: string;
       team?: string;

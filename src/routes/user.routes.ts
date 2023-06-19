@@ -8,7 +8,7 @@ export const userRouter = express.Router();
 
 userRouter.get("/myuser", isAuth, userService.getMyUser); // TODOS LOS LOGADOS A SI MISMOS
 userRouter.get("/no-team", isAuth, userService.getPlayersWithoutTeam); // MANAGER / ADMIN
-userRouter.get("/myteam-players", isAuth, userService.getUsersByMyTeam); // MANAGER CON EQUIPO ASIGNADO / USERS CON EQUIPO ASIGNADO
+userRouter.get("/myteam-users", isAuth, userService.getUsersByMyTeam); // MANAGER CON EQUIPO ASIGNADO / USERS CON EQUIPO ASIGNADO
 userRouter.get("/", checkParams, isAuth, userService.getUsers); // ADMIN
 userRouter.get("/:id", isAuth, userService.getUserById); // ADMIN
 userRouter.post("/", userService.createUser); // NO LOGADO
