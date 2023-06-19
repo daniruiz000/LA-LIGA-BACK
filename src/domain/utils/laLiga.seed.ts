@@ -7,7 +7,7 @@ const seedLaLiga = async (): Promise<void> => {
   try {
     console.log("                                              ")
     console.log("----------------------------------------------")
-    console.log("---------------- SEED LALIGA ----------------")
+    console.log("---------------- SEED LALIGA -----------------")
     console.log("----------------------------------------------")
     console.log("                                              ")
     await mongoConnect();
