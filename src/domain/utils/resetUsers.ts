@@ -14,6 +14,7 @@ export const resetUsers = async (): Promise<void> => {
     const players = userList.filter(user => user.rol === ROL.PLAYER);
     const teams = await Team.find();
     const playersPerTeam = playersWithTeam / teams.length
+    const playersNoTeam = players.length - 50
 
     for (let i = 0; i < playersWithTeam; i++) {
       const player: IUserCreate = players[i];
@@ -21,6 +22,12 @@ export const resetUsers = async (): Promise<void> => {
       await userOdm.createUser(player);
     }
     console.log("Players creados y asignados a equipos correctamente");
+
+    for (let i = 0; i < playersNoTeam; i++) {
+      const player: IUserCreate = players[i + playersWithTeam];
+      await userOdm.createUser(player);
+    }
+    console.log("Players sin equipo creados correctamente");
 
     for (let i = 0; i < managers.length; i++) {
       const manager: IUserCreate = managers[i];
@@ -40,7 +47,7 @@ export const resetUsers = async (): Promise<void> => {
       users: userList.length,
       players: players.length,
       playersWithTeam,
-      playersNoTeam: players.length - 50,
+      playersNoTeam,
       managers: managers.length,
       admins: admins.length,
       playersPerTeam

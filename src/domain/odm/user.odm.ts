@@ -17,18 +17,18 @@ const getUserById = async (id: string): Promise<Document<IUser> | null> => {
 };
 
 const getPlayersByIdTeam = async (teamId: string): Promise<IUser[]> => {
-  const players: IUser[] | null = await User.find({ team: teamId, rol: ROL.PLAYER });
+  const players: IUser[] | null = await User.find({ team: teamId, rol: ROL.PLAYER }).populate("team");
   return players
 };
 
 const getPlayersWithoutTeam = async (): Promise<IUser[]> => {
-  const players: IUser[] | null = await User.find({ team: undefined });
+  const players: IUser[] | null = await User.find({ team: { $exists: false }, rol: ROL.PLAYER }).populate("team");
   console.log(players)
   return players
 };
 
 const getManagerByIdTeam = async (teamId: string): Promise<IUser[]> => {
-  const players: IUser[] | null = await User.find({ team: teamId, rol: ROL.MANAGER });
+  const players: IUser[] | null = await User.find({ team: teamId, rol: ROL.MANAGER }).populate("team");
   return players
 };
 
