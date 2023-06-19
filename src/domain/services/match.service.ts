@@ -44,16 +44,12 @@ export const getMatchByTeamId = async (req: Request, res: Response, next: NextFu
 
 export const getMatchById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    //   is auth
+    //  NO LOGIN
     const matchId = req.params.id;
-    if (!req.user) {
-      res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
-      return;
-    }
 
     const match = await matchOdm.getMatchById(matchId);
     if (!match) {
-      res.status(404).json({ error: "No existe el equipo" });
+      res.status(404).json({ error: "No existe el partido" });
       return;
     }
     res.json(match)
