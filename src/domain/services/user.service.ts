@@ -3,6 +3,8 @@ import { Request, Response, NextFunction } from "express";
 
 import { generateToken } from "../utils/token";
 import { userOdm } from "../odm/user.odm";
+import { matchOdm } from "../odm/match.odm";
+import { ROL } from "../entities/user-entity";
 
 export const getUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
@@ -36,9 +38,11 @@ export const getMyUser = async (req: Request, res: Response, next: NextFunction)
     // ADMIN / EL PROPIO USUARIO A SÍ MISMO (CUALQUIER USUARIO LOGADO)
     const user = await userOdm.getUserById(req.user.id as string);
     const playersOnMyTeam = await userOdm.getPlayersByIdTeam(req.user.team as string)
+    const matchsOnMyTeam = await matchOdm.getMatchsByTeamId(req.user.team as string)
     const response = {
       user,
-      playersOnMyTeam
+      playersOnMyTeam: req.user.rol === ROL.ADMIN ? [] : playersOnMyTeam,
+      matchsOnMyTeam
     }
     res.json(response);
   } catch (error) {
@@ -83,9 +87,15 @@ export const getUsersByMyTeam = async (req: Request, res: Response, next: NextFu
         res.status(404).json({ error: "No existe manager para este equipo" });
         return;
       }
+      const matchs = await matchOdm.getMatchsByTeamId(teamId)
+      if (!matchs) {
+        res.status(404).json({ error: "No existe partidos para este equipo" });
+        return;
+      }
       const response = {
         players,
-        manager
+        manager,
+        matchs
       }
       res.json(response);
     } else {
@@ -243,7 +253,7 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
 
     res.status(200).json({
       token: jwtToken,
-      userToSend
+      rol: userToSend.rol
     });
   } catch (error) {
     next(error);
