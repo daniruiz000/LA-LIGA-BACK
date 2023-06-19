@@ -11,25 +11,31 @@ export const generateLeague = async (): Promise<void> => {
     }
     await matchOdm.deleteAllMatch();
     console.log("Partidos borrados");
+
     const matches: IMatchCreate[] = [];
     const numTeams = teams.length;
     const numRoundsPerFase = numTeams - 1;
     const startDate = new Date();
 
-    // Generar los partidos de la primera vuelta
+    // Generar los enfrentamientos de la primera vuelta
     for (let round = 0; round < numRoundsPerFase; round++) {
-      const roundStartDate = new Date(startDate.getTime() + round * 7 * 24 * 60 * 60 * 1000);
+      const roundMatches: IMatchCreate[] = [];
 
       // Generar los partidos de la ronda actual
-      for (let matchIndex = 0; matchIndex < numTeams / 2; matchIndex++) {
-        const localIndex = matchIndex;
-        const visitorIndex = numTeams - 1 - matchIndex;
-        const localTeam = teams[localIndex];
-        const visitorTeam = teams[visitorIndex];
+      for (let i = 0; i < numTeams / 2; i++) {
+        const home = (round + i) % numTeams;
+        const away = (numTeams - 1 - i + round) % numTeams;
 
-        const matchDate: Date = new Date(roundStartDate.getTime());
+        if (home === away) {
+          // Evitar el enfrentamiento contra sí mismo
+          continue;
+        }
 
-        // Crear el objeto del partido
+        const localTeam = teams[home];
+        const visitorTeam = teams[away];
+
+        const matchDate: Date = new Date(startDate.getTime() + round * 7 * 24 * 60 * 60 * 1000);
+
         const match: IMatchCreate = {
           date: matchDate,
           localTeam,
@@ -38,44 +44,57 @@ export const generateLeague = async (): Promise<void> => {
           round: round + 1, // Se incrementa en 1 para indicar la ronda actual
         };
 
-        matches.push(match);
+        roundMatches.push(match);
       }
+
+      matches.push(...roundMatches);
     }
 
-    // Generar los partidos de la segunda vuelta
-    for (let round = numRoundsPerFase; round < 2 * numRoundsPerFase; round++) {
-      const roundStartDate = new Date(startDate.getTime() + round * 7 * 24 * 60 * 60 * 1000);
+    // Generar los enfrentamientos de la segunda vuelta
+    for (let round = numRoundsPerFase - 1; round >= 0; round--) {
+      const roundMatches: IMatchCreate[] = [];
 
       // Generar los partidos de la ronda actual
-      for (let matchIndex = 0; matchIndex < numTeams / 2; matchIndex++) {
-        const localIndex = numTeams - 1 - matchIndex;
-        const visitorIndex = matchIndex;
-        const localTeam = teams[visitorIndex];
-        const visitorTeam = teams[localIndex];
+      for (let i = 0; i < numTeams / 2; i++) {
+        const home = (numTeams - 1 - i + round) % numTeams;
+        const away = (round + i) % numTeams;
 
-        const matchDate: Date = new Date(roundStartDate.getTime());
+        if (home === away) {
+          // Evitar el enfrentamiento contra sí mismo
+          continue;
+        }
 
-        // Crear el objeto del partido
+        const localTeam = teams[home];
+        const visitorTeam = teams[away];
+
+        const matchDate: Date = new Date(startDate.getTime() + round * 7 * 24 * 60 * 60 * 1000);
+
         const match: IMatchCreate = {
           date: matchDate,
           localTeam,
           visitorTeam,
           played: false,
-          round: round + 1, // Se incrementa en 1 para indicar la ronda actual
+          round: round + numRoundsPerFase + 1, // Se incrementa en 1 para indicar la ronda actual
         };
 
-        matches.push(match);
+        roundMatches.push(match);
       }
+
+      matches.push(...roundMatches);
     }
 
     // Guardar los partidos en la base de datos
     await matchOdm.createMatchsFromArray(matches);
-
+    const matchSort = matches.sort((a, b) => a.round - b.round)
+    for (let i = 0; i < matchSort.length; i++) {
+      const match = matches[i];
+      console.log(`Jornada ${match.round} Partido: ${match.localTeam.name}/ ${match.visitorTeam.name} Fecha ${match.date.getDate()}/${match.date.getMonth()}`)
+    }
     console.log("Partidos generados correctamente");
     console.log({
-      matches: matches.length,
+      matchesNum: matches.length,
       numRounds: numRoundsPerFase * 2,
-      matchesPerRound: matches.length / (numRoundsPerFase * 2)
+      matchesPerRound: numTeams / 2,
     });
     console.log("Liga generada correctamente");
   } catch (error) {

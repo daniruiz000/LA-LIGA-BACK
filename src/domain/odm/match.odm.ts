@@ -15,6 +15,12 @@ const getMatchById = async (id: string): Promise<Document<IMatch> | null> => {
   return await Match.findById(id).populate(["localTeam", "visitorTeam"]);
 };
 
+const getMatchsByTeamId = async (teamId: string): Promise<IMatch[]> => {
+  return await Match.find({
+    $or: [{ localTeam: teamId }, { visitorTeam: teamId }]
+  }).populate(["localTeam", "visitorTeam"]);
+};
+
 const createMatch = async (matchData: IMatchCreate): Promise<Document<IMatch>> => {
   const match = new Match(matchData);
   const document: Document<IMatch> = await match.save() as any;
@@ -45,6 +51,7 @@ export const matchOdm = {
   getAllMatchs,
   getMatchCount,
   getMatchById,
+  getMatchsByTeamId,
   createMatch,
   createMatchsFromArray,
   deleteMatch,
