@@ -10,6 +10,7 @@ matchRouter.get("/", checkParams, matchService.getMatchs)
 matchRouter.get("/:id", matchService.getMatchById);
 matchRouter.post("/", isAuth, matchService.createMatch);
 matchRouter.delete("/:id", isAuth, matchService.deleteMatch);
+matchRouter.post("/generate-league", isAuth, matchService.generateLeague);
 matchRouter.put("/:id", isAuth, matchService.updateMatch);
 /**
  * @swagger

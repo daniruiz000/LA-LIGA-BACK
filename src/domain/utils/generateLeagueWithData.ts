@@ -4,7 +4,7 @@ import { ROL, User } from "../entities/user-entity";
 import { matchOdm } from "../odm/match.odm";
 import { generateGoalIds } from "./generateGoals";
 
-export const generateLeague = async (): Promise<void> => {
+export const generateLeagueWithData = async (): Promise<void> => {
   try {
     const teams = await Team.find();
     if (teams.length === 0) {

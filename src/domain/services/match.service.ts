@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { matchOdm } from "../odm/match.odm";
+import { generateLeagueFunction } from "../utils/generateLeagueFunction";
 
 export const getMatchs = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
@@ -73,6 +74,21 @@ export const createMatch = async (req: Request, res: Response, next: NextFunctio
   }
 };
 
+export const generateLeague = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    // Sólo ADMIN
+    if (req.user.rol !== "ADMIN") {
+      res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
+      return;
+    }
+
+    await generateLeagueFunction()
+    res.json({});
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const deleteMatch = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     // Sólo ADMIN
@@ -124,4 +140,5 @@ export const matchService = {
   createMatch,
   deleteMatch,
   updateMatch,
+  generateLeague,
 };
