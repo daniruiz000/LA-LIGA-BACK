@@ -20,7 +20,8 @@ export const isAuth = async (req: Request, res: Response, next: NextFunction): P
     if (!user) {
       throw new Error("No tienes autorización para realizar esta operación");
     }
-    req.user = user;
+    const team = user.team
+    req.user = { id: user.id, team, rol: user.rol };
     next();
 
     return null;

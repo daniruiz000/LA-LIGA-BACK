@@ -3,6 +3,8 @@ import { Request, Response, NextFunction } from "express";
 
 import { generateToken } from "../utils/token";
 import { userOdm } from "../odm/user.odm";
+import { matchOdm } from "../odm/match.odm";
+import { ROL } from "../entities/user-entity";
 
 export const getUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
@@ -34,8 +36,15 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction):
 export const getMyUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     // ADMIN / EL PROPIO USUARIO A SÍ MISMO (CUALQUIER USUARIO LOGADO)
-    const user = req.user;
-    res.json(user);
+    const user = await userOdm.getUserById(req.user.id as string);
+    const playersOnMyTeam = await userOdm.getPlayersByIdTeam(req.user.team as string)
+    const matchsOnMyTeam = await matchOdm.getMatchsByTeamId(req.user.team as string)
+    const response = {
+      user,
+      playersOnMyTeam: req.user.rol === ROL.ADMIN ? [] : playersOnMyTeam,
+      matchsOnMyTeam
+    }
+    res.json(response);
   } catch (error) {
     next(error);
   }
@@ -78,9 +87,15 @@ export const getUsersByMyTeam = async (req: Request, res: Response, next: NextFu
         res.status(404).json({ error: "No existe manager para este equipo" });
         return;
       }
+      const matchs = await matchOdm.getMatchsByTeamId(teamId)
+      if (!matchs) {
+        res.status(404).json({ error: "No existe partidos para este equipo" });
+        return;
+      }
       const response = {
         players,
-        manager
+        manager,
+        matchs
       }
       res.json(response);
     } else {
@@ -169,7 +184,7 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
     const updateUserId = req.params.id;
 
     // Solo ADMIN o el propio usuario a sí mismo (cualquier usuario logado) / MANAGER A LOS DE SU EQUIPO
-    if (req.user.rol !== "ADMIN" && req.user.id !== updateUserId && req.user.rol !== "MANAGER") {
+    if (req.user.rol !== "ADMIN" && (req.user.id !== updateUserId && req.user.rol !== "MANAGER")) {
       res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
       return;
     }
@@ -181,16 +196,23 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
     }
 
     // Guardamos el usuario actualizándolo con los parámetros que nos manden
-    const newLastName = req.user.id !== updateUserId || req.user.rol === "ADMIN" ? req.body.lastName : userToUpdate.get("lastName");
-    const newFirstName = req.user.id !== updateUserId || req.user.rol === "ADMIN" ? req.body.firstName : userToUpdate.get("firstName");
-    const newEmail = req.user.id !== updateUserId || req.user.rol === "ADMIN" ? req.body.email : userToUpdate.get("email");
-    const newPassword = req.user.id !== updateUserId || req.user.rol === "ADMIN" ? req.body.password : userToUpdate.get("password");
-    const newImage = req.user.id !== updateUserId || req.user.rol === "ADMIN" ? req.body.image : userToUpdate.get("image");
+    const newLastName = (req.user.id === updateUserId || req.user.rol === "ADMIN") && req.body.lastName ? req.body.lastName : userToUpdate.get("lastName");
+    const newFirstName = (req.user.id === updateUserId || req.user.rol === "ADMIN") && req.body.firstName ? req.body.firstName : userToUpdate.get("firstName");
+    const newEmail = (req.user.id === updateUserId || req.user.rol === "ADMIN") && req.body.email ? req.body.email : userToUpdate.get("email");
+    const newPassword = req.body.password
+    const newImage = (req.user.id === updateUserId || req.user.rol === "ADMIN") && req.body.image ? req.body.image : userToUpdate.get("image");
     const newRol = req.user.rol === "ADMIN" ? req.body.rol : userToUpdate.get("rol");
     const newTeam = (req.user.rol === "MANAGER" && req.user.team === userToUpdate.get("team")) || req.user.rol === "ADMIN" ? req.body.team : userToUpdate.get("team");
-    const userSended = { ...req.body, rol: newRol, team: newTeam, firstName: newFirstName, lastName: newLastName, email: newEmail, password: newPassword, image: newImage };
-    Object.assign(userToUpdate, userSended);
-    await userToUpdate.save();
+
+    if (req.body.password) {
+      const userSended = { ...req.body, rol: newRol, team: newTeam, firstName: newFirstName, lastName: newLastName, email: newEmail, password: newPassword, image: newImage };
+      Object.assign(userToUpdate, userSended);
+      await userToUpdate.save();
+    } else {
+      const userSended = { ...req.body, rol: newRol, team: newTeam, firstName: newFirstName, lastName: newLastName, email: newEmail, image: newImage };
+      Object.assign(userToUpdate, userSended);
+      await userToUpdate.save();
+    }
 
     // Quitamos la contraseña y el rol del usuario que enviamos en la respuesta
     const userToSend: any = userToUpdate.toObject();
@@ -231,7 +253,7 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
 
     res.status(200).json({
       token: jwtToken,
-      user: userToSend,
+      rol: userToSend.rol
     });
   } catch (error) {
     next(error);

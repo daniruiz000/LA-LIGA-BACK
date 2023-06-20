@@ -1,42 +1,59 @@
 /**
  * @swagger
  * components:
- *  schemas:
- *    User:
- *      type: object
- *      required:
- *        - email
- *        - password
- *        - firstName
- *        - lastName
- *        - players
- *        - rol
- *      properties:
- *        email:
- *          type: string
- *          format: email
- *          description: Email del user
- *        password:
- *          type: string
- *          minLength: 8
- *          description: Contraseña del user
- *        firstName:
- *          type: string
- *          minLength: 3
- *          maxLength: 22
- *          description: Nombre del user
- *        lastName:
- *          type: string
- *          minLength: 3
- *          maxLength: 22
- *          description: Nombre del user
- *        team:
- *          type: [{type: Schema.Types.ObjectId, ref: "User"}]
- *          description: Hijos del user
- *        rol:
- *          type: String
- *          enum: ROL
- *          description: Rol del user
+ *   schemas:
+ *     User:
+ *       type: object
+ *       required:
+ *         - firstName
+ *         - lastName
+ *         - email
+ *         - password
+ *         - rol
+ *       properties:
+ *         _id:
+ *           type: string
+ *           description: ID del usuario.
+ *         firstName:
+ *           type: string
+ *           description: Nombre del usuario.
+ *           minLength: 3
+ *           maxLength: 22
+ *         lastName:
+ *           type: string
+ *           description: Apellido del usuario.
+ *           minLength: 3
+ *           maxLength: 22
+ *         email:
+ *           type: string
+ *           description: Email del usuario.
+ *           format: email
+ *         password:
+ *           type: string
+ *           description: Contraseña del usuario.
+ *           minLength: 8
+ *         rol:
+ *           type: string
+ *           description: Rol del usuario.
+ *           enum:
+ *             - PLAYER
+ *             - MANAGER
+ *             - ADMIN
+ *         team:
+ *           type: string
+ *           description: ID del equipo al que pertenece el usuario.
+ *         image:
+ *           type: string
+ *           description: URL de la imagen del usuario.
+ *       example:
+ *         _id: 60c84e71ebeb8f001ff60999
+ *         firstName: John
+ *         lastName: Doe
+ *         email: john.doe@example.com
+ *         password: [hidden]
+ *         rol: PLAYER
+ *         team: 60c84e71ebeb8f001ff60998
+ *         image: https://example.com/johndoe.png
  */
 
 import mongoose, { Document } from "mongoose";
@@ -84,8 +101,8 @@ const userSchema = new Schema<IUserCreate>(
       trim: true,
       unique: true, // indica que no puede haber otra entidad con esta propiedad que tenga el mismo valor.
       validate: {
-        validator: (text: string) => validator.isEmail, // Validamos haciendo uso de la librería validator y la función isEmail que incorpora.
-        message: "Email incorrecto"
+        validator: (text: string) => validator.isEmail(text),
+        message: "Email incorrecto",
       },
       required: true
     },

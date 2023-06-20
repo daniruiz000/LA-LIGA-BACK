@@ -22,7 +22,7 @@ export const getMatchs = async (req: Request, res: Response, next: NextFunction)
   }
 };
 
-export const getMatchById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const getMatchByTeamId = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     //   is auth
     const matchId = req.params.id;
@@ -34,6 +34,22 @@ export const getMatchById = async (req: Request, res: Response, next: NextFuncti
     const match = await matchOdm.getMatchById(matchId);
     if (!match) {
       res.status(404).json({ error: "No existe el equipo" });
+      return;
+    }
+    res.json(match)
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getMatchById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    //  NO LOGIN
+    const matchId = req.params.id;
+
+    const match = await matchOdm.getMatchById(matchId);
+    if (!match) {
+      res.status(404).json({ error: "No existe el partido" });
       return;
     }
     res.json(match)
@@ -104,6 +120,7 @@ export const updateMatch = async (req: Request, res: Response, next: NextFunctio
 export const matchService = {
   getMatchs,
   getMatchById,
+  getMatchByTeamId,
   createMatch,
   deleteMatch,
   updateMatch,

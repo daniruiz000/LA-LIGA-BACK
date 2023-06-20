@@ -32,11 +32,10 @@ export const getTeamById = async (req: Request, res: Response, next: NextFunctio
   try {
     //  ADMIN
     const teamId = req.params.id;
-    if (req.user.rol !== "ADMIN") {
+    if (req.user.rol !== "ADMIN" && req.user.team?.toString() !== teamId) {
       res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
       return;
     }
-
     const team = await teamOdm.getTeamById(teamId);
     if (!team) {
       res.status(404).json({ error: "No existe el equipo" });

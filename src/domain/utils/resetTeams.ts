@@ -10,6 +10,7 @@ export const resetTeams = async (): Promise<void> => {
     console.log("Borrados teams");
     await teamOdm.createTeamsFromArray(teamList)
     console.log("Creados teams correctamente");
+    console.log({ teams: teamList.length });
   } catch (error) {
     console.error(error);
   }

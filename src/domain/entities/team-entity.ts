@@ -1,22 +1,43 @@
 /**
  * @swagger
  * components:
- *  schemas:
- *    Team:
- *      type: object
- *      required:
- *        - name
- *      properties:
- *        name:
- *          type: string
- *          minLength: 5
- *          maxLength: 30
- *          description: Nombre del autor
+ *   schemas:
+ *     TeamCreate:
+ *       type: object
+ *       properties:
+ *         name:
+ *           type: string
+ *           description: Nombre del equipo.
+ *           minLength: 5
+ *           maxLength: 30
+ *         initials:
+ *           type: string
+ *           description: Iniciales del equipo.
+ *           minLength: 3
+ *           maxLength: 3
+ *         image:
+ *           type: string
+ *           description: URL de la imagen del equipo.
+ *       example:
+ *         name: Equipo A
+ *         initials: EQA
+ *         image: https://example.com/teamA.png
+ *     Team:
+ *       allOf:
+ *         - $ref: '#/components/schemas/TeamCreate'
+ *         - type: object
+ *           properties:
+ *             _id:
+ *               type: string
+ *               description: ID del equipo.
+ *           example:
+ *             _id: 60c84e71ebeb8f001ff60999
+ *             name: Equipo A
+ *             initials: EQA
+ *             image: https://example.com/teamA.png
  */
 
-import mongoose, { Document } from "mongoose";
-
-const Schema = mongoose.Schema;
+import { Schema, model, Document } from "mongoose";
 
 export interface ITeamCreate {
   name: string;
@@ -24,31 +45,33 @@ export interface ITeamCreate {
   image?: string;
 }
 
-export type ITeam = ITeamCreate & Document
+export interface ITeam extends ITeamCreate, Document {}
 
 const teamSchema = new Schema<ITeamCreate>(
   {
     name: {
       type: String,
       trim: true,
-      minLength: [5, "Al menos cinco letras para el nombre"],
-      maxLength: [30, "Nombre demasiado largo, máximo de 30 caracteres"],
-      required: true
+      unique: true,
+      minLength: [5, "El nombre debe tener al menos cinco letras"],
+      maxLength: [30, "El nombre debe tener como máximo 30 caracteres"],
+      required: true,
     },
     initials: {
       type: String,
       trim: true,
-      minLength: [3, "Debe ser un Alias compuesto por 3 letras"],
-      maxLength: [3, "Debe ser un Alias compuesto por 3 letras"],
-      required: true
+      minLength: [3, "Las iniciales deben estar compuestas por tres letras"],
+      maxLength: [3, "Las iniciales deben estar compuestas por tres letras"],
+      unique: true,
+      required: true,
     },
     image: {
       type: String,
       required: false,
+      maxLength: [255, "La URL de la imagen no debe exceder los 255 caracteres"],
     },
   },
-  { timestamps: true } // Cada vez que se modifique un documento refleja la hora y fecha de modificación
+  { timestamps: true }
 );
 
-// Creamos un modelo para que siempre que creamos un classroom valide contra el Schema que hemos creado para ver si es valido.
-export const Team = mongoose.model<ITeamCreate>("Team", teamSchema);
+export const Team = model<ITeam>("Team", teamSchema);
