@@ -87,6 +87,10 @@ export const generateLeague = async (): Promise<void> => {
     await matchOdm.createMatchsFromArray(matches);
     const matchSort = matches.sort((a, b) => a.round - b.round)
     for (let i = 0; i < matchSort.length; i++) {
+    const matchsSort = matches.sort((a, b) => a.round - b.round)
+    await matchOdm.createMatchsFromArray(matchsSort);
+
+    for (let i = 0; i < matchsSort.length; i++) {
       const match = matches[i];
       console.log(`Jornada ${match.round} Partido: ${match.localTeam.name}/ ${match.visitorTeam.name} Fecha ${match.date.getDate()}/${match.date.getMonth()}`)
     }
