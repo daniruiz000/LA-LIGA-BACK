@@ -83,7 +83,7 @@ export const generateLeague = async (): Promise<void> => {
       matches.push(...roundMatches);
     }
 
-    // Guardar los partidos en la base de datos
+    // Guardar los partidos en la base de datos.
     await matchOdm.createMatchsFromArray(matches);
     const matchSort = matches.sort((a, b) => a.round - b.round)
     for (let i = 0; i < matchSort.length; i++) {
