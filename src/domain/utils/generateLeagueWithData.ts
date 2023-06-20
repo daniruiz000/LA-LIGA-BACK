@@ -2,6 +2,7 @@ import { IMatchCreate } from "../entities/match-entity";
 import { Team } from "../entities/team-entity";
 import { ROL, User } from "../entities/user-entity";
 import { matchOdm } from "../odm/match.odm";
+import { convertDateStringToDate } from "./convertDateStringToDate";
 import { generateGoalIds } from "./generateGoals";
 
 export const generateLeagueWithData = async (): Promise<void> => {
@@ -22,7 +23,9 @@ export const generateLeagueWithData = async (): Promise<void> => {
     const matches: IMatchCreate[] = [];
     const numTeams = teams.length;
     const numRoundsPerFase = numTeams - 1;
-    const startDate = new Date();
+    const actualDate = new Date()
+    const startDate = convertDateStringToDate("22/5/22");
+    let contDate = startDate
 
     // Generar los enfrentamientos de la primera vuelta
     for (let round = 0; round < numRoundsPerFase; round++) {
@@ -46,8 +49,8 @@ export const generateLeagueWithData = async (): Promise<void> => {
 
         const matchDate: Date = new Date(startDate.getTime() + round * 7 * 24 * 60 * 60 * 1000);
 
-        const localGoals = generateGoalIds(localPlayers, 0, 5);
-        const visitorGoals = generateGoalIds(visitorPlayers, 0, 5);
+        const localGoals = generateGoalIds(localPlayers, 0, 3);
+        const visitorGoals = generateGoalIds(visitorPlayers, 0, 3);
 
         const match: IMatchCreate = {
           date: matchDate,
@@ -55,10 +58,10 @@ export const generateLeagueWithData = async (): Promise<void> => {
           visitorTeam,
           goalsLocal: localGoals,
           goalsVisitor: visitorGoals,
-          played: false,
+          played: matchDate < actualDate,
           round: round + 1, // Se incrementa en 1 para indicar la ronda actual
         };
-
+        contDate = matchDate
         roundMatches.push(match);
       }
 
@@ -85,10 +88,10 @@ export const generateLeagueWithData = async (): Promise<void> => {
         const localPlayers = await User.find({ team: localTeam.id }).populate("team");
         const visitorPlayers = await User.find({ team: visitorTeam.id }).populate("team");
 
-        const matchDate: Date = new Date(startDate.getTime() + (round + numRoundsPerFase) * 7 * 24 * 60 * 60 * 1000);
+        const matchDate: Date = new Date(contDate.getTime() + (round + numRoundsPerFase) * 7 * 24 * 60 * 60 * 1000);
 
-        const localGoals = generateGoalIds(localPlayers, 0, 5);
-        const visitorGoals = generateGoalIds(visitorPlayers, 0, 5);
+        const localGoals = generateGoalIds(localPlayers, 0, 3);
+        const visitorGoals = generateGoalIds(visitorPlayers, 0, 3);
 
         const match: IMatchCreate = {
           date: matchDate,
@@ -96,7 +99,7 @@ export const generateLeagueWithData = async (): Promise<void> => {
           visitorTeam,
           goalsLocal: localGoals,
           goalsVisitor: visitorGoals,
-          played: false,
+          played: matchDate < actualDate,
           round: round + numRoundsPerFase + 1, // Se incrementa en 1 para indicar la ronda actual
         };
 
@@ -111,7 +114,9 @@ export const generateLeagueWithData = async (): Promise<void> => {
     const matchSort = matches.sort((a, b) => a.round - b.round)
     for (let i = 0; i < matchSort.length; i++) {
       const match = matches[i];
-      console.log(`Jornada ${match.round} - Partido: ${match.localTeam.name} / ${match.visitorTeam.name} - Resultado: ${match.goalsLocal?.length ? match.goalsLocal?.length : 0}-${match.goalsVisitor?.length ? match.goalsVisitor?.length : 0} Fecha ${match.date.getDate()}/${match.date.getMonth()}`)
+      const formattedDate = match.date.toLocaleDateString();
+      const status = match.played ? "Jugado" : "Pendiente";
+      console.log(`Jornada ${match.round} Partido: ${match.localTeam.name} | ${match.goalsLocal?.length ? match.goalsLocal?.length : 0} - ${match.goalsVisitor?.length ? match.goalsVisitor?.length : 0} | ${match.visitorTeam.name} Fecha ${formattedDate} - ${status}`);
     }
     console.log("Partidos generados correctamente");
     console.log({

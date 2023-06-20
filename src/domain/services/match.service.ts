@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { matchOdm } from "../odm/match.odm";
 import { generateLeagueFunction } from "../utils/generateLeagueFunction";
+import { convertDateStringToDate } from "../utils/convertDateStringToDate";
 
 export const getMatchs = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
@@ -81,9 +82,13 @@ export const generateLeague = async (req: Request, res: Response, next: NextFunc
       res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
       return;
     }
-
-    await generateLeagueFunction()
-    res.json({});
+    if (!req.body.startDate) {
+      res.status(401).json({ error: "Tiene que introducir una fecha de inicio con formato:'21/5/4' para realizar esta operación" });
+      return;
+    }
+    const startDate = convertDateStringToDate(req.body.startDate)
+    const matchs = await generateLeagueFunction(startDate)
+    res.json(matchs);
   } catch (error) {
     next(error);
   }

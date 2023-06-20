@@ -399,7 +399,7 @@
 					"response": []
 				},
 				{
-					"name": "Generate League // ADMIN",
+					"name": "Regnerate League // ADMIN",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -421,7 +421,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "",
+							"raw": "{\r\n    \"startDate\": \"25/05/2023\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -534,7 +534,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTBkZWFmMTVlY2Y2NGEyZjEyMjY5MSIsImVtYWlsIjoiaGVjdG9yLmd1ZXJyZXJvQGV4YW1wbGUuY29tIiwiaWF0IjoxNjg3MjE5NTAxLCJleHAiOjE2ODczMDU5MDF9.hlQn2Bqq728QCMerl42KVtNN04DG_E08ZZ9Le563kQ8",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTE2OTg4Njk1NDk2YjdjZDJmZmFjYiIsImVtYWlsIjoiamF2aWVyLmdhcmNpYUBleGFtcGxlLmNvbSIsImlhdCI6MTY4NzI1MTgxNywiZXhwIjoxNjg3MzM4MjE3fQ.bZXSrU-DMNtIvNCXMqWfsL-GltrgRso3ocs5Ut1bHRk",
 									"type": "string"
 								}
 							]
@@ -602,7 +602,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTBkZWIyMTVlY2Y2NGEyZjEyMjZjZCIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiaWF0IjoxNjg3MjE3MDU0LCJleHAiOjE2ODczMDM0NTR9.itrjQXC2m5kkZtWbTMYiM1EnKkmpCGioZkJw2K7u29Y",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTE2OTg4Njk1NDk2YjdjZDJmZmFjYiIsImVtYWlsIjoiamF2aWVyLmdhcmNpYUBleGFtcGxlLmNvbSIsImlhdCI6MTY4NzI1MTgxNywiZXhwIjoxNjg3MzM4MjE3fQ.bZXSrU-DMNtIvNCXMqWfsL-GltrgRso3ocs5Ut1bHRk",
 									"type": "string"
 								}
 							]
