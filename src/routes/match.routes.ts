@@ -205,6 +205,7 @@ matchRouter.put("/:id", isAuth, matchService.updateMatch);
 
 /**
  * @swagger
+<<<<<<< Updated upstream
  * /classroom/login:
  *   post:
  *     summary: Login as an classroom
@@ -252,4 +253,140 @@ matchRouter.put("/:id", isAuth, matchService.updateMatch);
  *         description: The image was uploaded successfully
  *       404:
  *         description: The classroom was not found
+=======
+ * components:
+ *   schemas:
+ *     MatchCreate:
+ *       type: object
+ *       properties:
+ *         date:
+ *           type: string
+ *           format: date-time
+ *         localTeam:
+ *           $ref: '#/components/schemas/Team'
+ *         visitorTeam:
+ *           $ref: '#/components/schemas/Team'
+ *         goalsLocal:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/User'
+ *         goalsVisitor:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/User'
+ *         played:
+ *           type: boolean
+ *         round:
+ *           type: number
+ *           minimum: 1
+ *       required:
+ *         - date
+ *         - localTeam
+ *         - visitorTeam
+ *         - played
+ *         - round
+ *     Match:
+ *       allOf:
+ *         - $ref: '#/components/schemas/MatchCreate'
+ *         - type: object
+ *           properties:
+ *             _id:
+ *               type: string
+ *               description: ID del partido
+ *             createdAt:
+ *               type: string
+ *               format: date-time
+ *             updatedAt:
+ *               type: string
+ *               format: date-time
+ *           required:
+ *             - _id
+ *             - createdAt
+ *             - updatedAt
+ *     Team:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           description: ID del equipo
+ *         name:
+ *           type: string
+ *           description: Nombre del equipo
+ *         initials:
+ *           type: string
+ *           description: Iniciales del equipo
+ *         image:
+ *           type: string
+ *           description: URL de la imagen del equipo
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *       required:
+ *         - _id
+ *         - name
+ *         - initials
+ *         - createdAt
+ *         - updatedAt
+ *     User:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           description: ID del usuario
+ *         name:
+ *           type: string
+ *           description: Nombre del usuario
+ *         email:
+ *           type: string
+ *           format: email
+ *           description: Correo electrónico del usuario
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *       required:
+ *         - _id
+ *         - name
+ *         - email
+ *         - createdAt
+ *         - updatedAt
+ *     Pagination:
+ *       type: object
+ *       properties:
+ *         totalItems:
+ *           type: number
+ *           description: Total de elementos
+ *         totalPages:
+ *           type: number
+ *           description: Total de páginas
+ *         currentPage:
+ *           type: number
+ *           description: Página actual
+ *         pageSize:
+ *           type: number
+ *           description: Tamaño de página
+ *       required:
+ *         - totalItems
+ *         - totalPages
+ *         - currentPage
+ *         - pageSize
+ *     Error:
+ *       type: object
+ *       properties:
+ *         message:
+ *           type: string
+ *           description: Mensaje de error
+ *       required:
+ *         - message
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+>>>>>>> Stashed changes
  */

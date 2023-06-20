@@ -64,6 +64,62 @@ userRouter.post("/login", userService.login); // NO LOGADO
 
 /**
  * @swagger
+ * /user/myuser:
+ *   get:
+ *     summary: Get my User
+ *     tags: [User]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The user ID
+ *     responses:
+ *       200:
+ *         description: The user info
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
+
+/**
+ * @swagger
+ * /user/no-team:
+ *   get:
+ *     summary: Get Players Without Team
+ *     tags: [User]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The user ID
+ *     responses:
+ *       200:
+ *         description: The user info
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
+
+/**
+ * @swagger
  * /user/{id}:
  *   get:
  *     summary: Get an user by ID
@@ -232,28 +288,4 @@ userRouter.post("/login", userService.login); // NO LOGADO
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Error'
- */
-
-/**
- * @swagger
- * /user/image-upload:
- *   post:
- *     summary: Upload a image for a user
- *     tags: [User]
- *     consumes:
- *       - multipart/form-data
- *     parameters:
- *       - in: formData
- *         name: image
- *         type: file
- *         description: The file to upload.
- *       - in: formData
- *         name: userId
- *         type: string
- *         description: The id of the user
- *     responses:
- *       200:
- *         description: The image was uploaded successfully
- *       404:
- *         description: The user was not found
  */
