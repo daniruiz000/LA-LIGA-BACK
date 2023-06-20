@@ -230,27 +230,3 @@ teamRouter.put("/:id", isAuth, teamService.updateTeam);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-
-/**
- * @swagger
- * /team/image-upload:
- *   post:
- *     summary: Upload a image for a team
- *     tags: [Teams]
- *     consumes:
- *       - multipart/form-data
- *     parameters:
- *       - in: formData
- *         name: image
- *         type: file
- *         description: The file to upload.
- *       - in: formData
- *         name: teamId
- *         type: string
- *         description: The id of the team
- *     responses:
- *       200:
- *         description: The image was uploaded successfully
- *       404:
- *         description: The team was not found
- */
