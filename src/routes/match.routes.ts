@@ -173,7 +173,7 @@ matchRouter.put("/:id", isAuth, matchService.updateMatch);
  *       404:
  */
 
- * components:
+/** components:
  *   schemas:
  *     MatchCreate:
  *       type: object
