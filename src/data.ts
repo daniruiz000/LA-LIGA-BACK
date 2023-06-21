@@ -70,7 +70,7 @@ export const userList = [
 
 export const teamList = [
   { name: "Real Madrid CF", initials: "RMC", image: "https://assets.laliga.com/assets/2019/06/07/small/real-madrid.png" },
-  { name: "Barcelona FC", initials: "BCF", image: "https://assets.laliga.com/assets/2019/06/07/small/barcelona.png" },
+  { name: "Barcelona FC", initials: "FBC", image: "https://assets.laliga.com/assets/2019/06/07/small/barcelona.png" },
   { name: "Cadiz FC", initials: "CDF", image: "https://assets.laliga.com/assets/2019/06/07/small/cadiz.png" },
   { name: "Real Betis", initials: "RBC", image: "https://assets.laliga.com/assets/2022/09/15/small/e4a09419d3bd115b8f3dab73d480e146.png" },
   { name: "Sevilla FC", initials: "SFC", image: "https://assets.laliga.com/assets/2019/06/07/small/sevilla.png" },
