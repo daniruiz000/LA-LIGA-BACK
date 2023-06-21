@@ -32,18 +32,9 @@ describe("User Controler", () => {
     rol: ROL.ADMIN,
   }
 
-  // const teacherMoc: IUserCreate = {
-  //   email: "antonia@gmail.com",
-  //   password: "123456789",
-  //   firstName: "Antonia",
-  //   lastName: "Higaldo",
-  //   rol: ROL.TEACHER,
-  // }
-
   let playerToken: string
   let managerToken: string
   let adminToken: string
-  // let teacherToken: string
 
   let createdUserId: string
 
@@ -52,8 +43,6 @@ describe("User Controler", () => {
     await mongoConnect() // Conecto a mongo pero a la BBDD de test mediante la biblioteca cross-env que nos permite modificar la variable de entorno del nombre de la BBDD desde el script de test.
     await userOdm.deleteAllUsers() // Borramos los usuarios de la BBDD
     await userOdm.createUser(adminMoc)
-    // await userOdm.createUser(teacherMoc)
-    await userOdm.createUser(playerMoc)
     await userOdm.createUser(managerMoc)
   });
   // Cuando acaben los test:
@@ -61,6 +50,20 @@ describe("User Controler", () => {
     await mongoose.connection.close() // Cerramos la conexión a mongo.
     appInstance.close()
   });
+
+  it("POST /user", async() => {
+    // const userToCreate = { ...adminMoc, email: "invented@gmail.com" }
+    // CREATED USER WITH USER NOT LOGGED -> 201 CREATED
+    const response = await request(app)
+      .post("/user")
+      .set("Accept", "application/json")
+      .send(playerMoc)
+      .expect(201)
+
+    expect(response.body).toHaveProperty("_id")
+    expect(response.body.email).toBe(playerMoc.email)
+    createdUserId = response.body._id
+  })
 
   it("POST /user/login", async () => {
     // WRONG login
@@ -99,20 +102,6 @@ describe("User Controler", () => {
     managerToken = managerResponse.body.token
     console.log(managerToken)
 
-    // // TEACHER  login
-    // const teacherCredentials = {
-    //   email: teacherMoc.email,
-    //   password: teacherMoc.password
-    // }
-    // const teacherResponse = await request(app)
-    //   .post("/user/login")
-    //   .send(teacherCredentials)
-    //   .expect(200)
-
-    // expect(teacherResponse.body).toHaveProperty("token")
-    // teacherToken = teacherResponse.body.token
-    // console.log(teacherToken)
-
     // ADMIN  login
     const adminCredentials = {
       email: adminMoc.email,
@@ -122,49 +111,16 @@ describe("User Controler", () => {
       .post("/user/login")
       .send(adminCredentials)
       .expect(200)
-
     expect(adminResponse.body).toHaveProperty("token")
     adminToken = adminResponse.body.token
     console.log(adminToken)
   })
 
-  it("POST /user", async() => {
-    // CREATED USER WITH USER NOT LOGGED -> 401 NO CREATED
-    const response = await request(app)
-      .post("/user")
-      .send(playerMoc)
-      .expect(201)
-
-    // // CREATED USER WITH USERLOGGED WITH TEACHER -> 401 NO CREATED
-    // await request(app)
-    //   .post("/user")
-    //   .set("Authorization", `Bearer ${teacherToken}`)
-    //   .send(userToCreate)
-    //   .expect(401)
-
-    // CREATED USER WITH USER LOGGED WITH ADMIN -> 201 CREATED
-    // const response = await request(app)
-    //   .post("/user")
-    //   .set("Authorization", `Bearer ${adminToken}`)
-    //   .send(userToCreate)
-    //   .expect(201)
-
-    expect(response.body).toHaveProperty("_id")
-    expect(response.body.email).toBe(playerMoc.email)
-    createdUserId = response.body._id
-  })
   it("GET /user/ returns all users", async () => {
     // Not logged -> 401
     await request(app)
       .get("/user")
       .expect(401)
-
-    // // TEACHER -> 200
-    // const teacherResponse = await request(app)
-    //   .get("/user")
-    //   .set("Authorization", `Bearer ${teacherToken}`)
-    //   .expect(200)
-    // expect(teacherResponse.body.data?.length).toBeDefined()
 
     // ADMIN -> 200
     const adminResponse = await request(app)
@@ -179,13 +135,6 @@ describe("User Controler", () => {
     await request(app)
       .get(`/user/${createdUserId}`)
       .expect(401)
-
-    // // TEACHER -> 200
-    // const teacherResponse = await request(app)
-    //   .get(`/user/${createdUserId}`)
-    //   .set("Authorization", `Bearer ${teacherToken}`)
-    //   .expect(200)
-    // expect(teacherResponse.body.firstName).toBeDefined()
 
     // ADMIN -> 200
     const adminResponse = await request(app)
@@ -202,33 +151,20 @@ describe("User Controler", () => {
       .send(updatedData)
       .expect(401)
 
-    // // TEACHER -> 401
-    // await request(app)
-    //   .put(`/user/${createdUserId}`)
-    //   .send(updatedData)
-    //   .set("Authorization", `Bearer ${teacherToken}`)
-    //   .expect(401)
-
     // ADMIN -> 200
     const adminResponse = await request(app)
       .put(`/user/${createdUserId}`)
+      .set("Authorization", `Bearer ${playerToken}`)
       .send(updatedData)
-      .set("Authorization", `Bearer ${adminToken}`)
       .expect(200)
     expect(adminResponse.body.firstName).toBe(updatedData.firstName)
   })
 
-  it("DELET /user/id delete user by id", async () => {
+  it("DELETE /user/id delete user by id", async () => {
     // NOT LOGED -> 401
     await request(app)
       .delete(`/user/${createdUserId}`)
       .expect(401)
-
-    // // TEACHER -> 401
-    // await request(app)
-    //   .delete(`/user/${createdUserId}`)
-    //   .set("Authorization", `Bearer ${teacherToken}`)
-    //   .expect(401)
 
     // ADMIN -> 200
     const adminResponse = await request(app)
