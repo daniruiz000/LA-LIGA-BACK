@@ -1,10 +1,15 @@
 import { Match, IMatch, IMatchCreate } from "../entities/match-entity";
 import { Document } from "mongoose";
 
-const getAllMatchs = async (page: number, limit: number): Promise<IMatch[]> => {
+const getAllMatchsPaginated = async (page: number, limit: number): Promise<IMatch[]> => {
   return await Match.find()
     .limit(limit)
     .skip((page - 1) * limit).populate(["localTeam", "visitorTeam"]);
+};
+
+const getAllMatchs = async (): Promise<IMatch[]> => {
+  return await Match.find()
+    .populate(["localTeam", "visitorTeam"]);
 };
 
 const getMatchCount = async (): Promise<number> => {
@@ -49,6 +54,7 @@ const updateMatch = async (id: string, matchData: IMatchCreate): Promise<Documen
 
 export const matchOdm = {
   getAllMatchs,
+  getAllMatchsPaginated,
   getMatchCount,
   getMatchById,
   getMatchsByTeamId,

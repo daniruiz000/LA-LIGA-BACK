@@ -6,6 +6,7 @@ import { checkParams } from "../domain/services/checkParams.middleware";
 
 export const matchRouter = express.Router();
 
+matchRouter.get("/matchall", matchService.getAllMatchs)
 matchRouter.get("/", checkParams, matchService.getMatchs)
 matchRouter.get("/:id", matchService.getMatchById);
 matchRouter.post("/", isAuth, matchService.createMatch);

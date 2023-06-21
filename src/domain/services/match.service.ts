@@ -5,6 +5,22 @@ import { convertDateStringToDate } from "../utils/convertDateStringToDate";
 import { Match } from "../entities/match-entity";
 import { calculateTeamStatisticsFunction } from "../utils/calculateTeamStatisticsFunction";
 
+export const getAllMatchs = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const matchs = await matchOdm.getAllMatchs();
+    const totalElements = await matchOdm.getMatchCount();
+
+    const response = {
+      totalItems: totalElements,
+      data: matchs,
+    };
+
+    res.json(response);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const getMatchs = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const page = req.query.page ? parseInt(req.query.page as string) : 1;
@@ -161,6 +177,7 @@ export const updateMatch = async (req: Request, res: Response, next: NextFunctio
 };
 
 export const matchService = {
+  getAllMatchs,
   getMatchs,
   getMatchById,
   getMatchByTeamId,
