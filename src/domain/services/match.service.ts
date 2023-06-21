@@ -26,7 +26,7 @@ export const getMatchs = async (req: Request, res: Response, next: NextFunction)
     const page = req.query.page ? parseInt(req.query.page as string) : 1;
     const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
 
-    const match = await matchOdm.getAllMatchs(page, limit);
+    const match = await matchOdm.getAllMatchsPaginated(page, limit);
     const totalElements = await matchOdm.getMatchCount();
 
     const response = {
