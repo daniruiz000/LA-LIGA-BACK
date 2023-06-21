@@ -4,13 +4,30 @@ import { generateLeagueFunction } from "../utils/generateLeagueFunction";
 import { convertDateStringToDate } from "../utils/convertDateStringToDate";
 import { Match } from "../entities/match-entity";
 import { calculateTeamStatisticsFunction } from "../utils/calculateTeamStatisticsFunction";
+import { teamOdm } from "../odm/team.odm";
+
+export const getAllMatchs = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const matchs = await matchOdm.getAllMatchs();
+    const totalElements = await teamOdm.getTeamCount();
+
+    const response = {
+      totalTeams: totalElements,
+      data: matchs,
+    };
+
+    res.json(response);
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const getMatchs = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const page = req.query.page ? parseInt(req.query.page as string) : 1;
     const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
 
-    const match = await matchOdm.getAllMatchs(page, limit);
+    const match = await matchOdm.getAllMatchsPaginated(page, limit);
     const totalElements = await matchOdm.getMatchCount();
 
     const response = {
@@ -78,13 +95,7 @@ export const createMatch = async (req: Request, res: Response, next: NextFunctio
 };
 export const calculateTeamStatistics = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    // Solo ADMIN
-    if (req.user.rol !== "ADMIN") {
-      res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
-      return;
-    }
-
-    const matches = await Match.find();
+    const matches = await Match.find().populate(["localTeam", "visitorTeam"]);
     if (!matches) {
       res.status(404).json({ error: "No hay partidos" });
       return;
@@ -161,6 +172,7 @@ export const updateMatch = async (req: Request, res: Response, next: NextFunctio
 };
 
 export const matchService = {
+  getAllMatchs,
   getMatchs,
   getMatchById,
   getMatchByTeamId,

@@ -253,13 +253,28 @@
 							"type": "noauth"
 						},
 						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OGVlYzEwYWJiNGFkMDRlODQ0YWMwMSIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiaWF0IjoxNjg3MDkxNjgwLCJleHAiOjE2ODcxNzgwODB9.gq63oer9OujB6ICblqiCnGGc6CDbsJJQTTPicOc9_xE",
-								"type": "text"
-							}
-						],
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/match/matchall",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"match",
+								"matchall"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Matchs Paginated // NO- LOGIN",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
 						"url": {
 							"raw": "{{base_url}}/match?page=1&limit=10",
 							"host": [
@@ -443,25 +458,15 @@
 				},
 				{
 					"name": "Calculate Statics // ADMIN",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTIxYmYzYzcyZjQxYjZmNzQ2ZGZlMiIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiaWF0IjoxNjg3Mjk3ODg0LCJleHAiOjE2ODczODQyODR9.REbSTIHfsjd11_yI8o_vgnX1nY2WMwCSBLyNx1f5Trc",
-									"type": "string"
-								}
-							]
+							"type": "noauth"
 						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OGVlYzEwYWJiNGFkMDRlODQ0YWMwMSIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiaWF0IjoxNjg3MDkxNjgwLCJleHAiOjE2ODcxNzgwODB9.gq63oer9OujB6ICblqiCnGGc6CDbsJJQTTPicOc9_xE",
-								"type": "text"
-							}
-						],
+						"method": "GET",
+						"header": [],
 						"body": {
 							"mode": "raw",
 							"raw": "{\r\n    \"startDate\": \"25/05/2023\"\r\n}",
@@ -472,13 +477,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/match//calculate-statics",
+							"raw": "{{base_url}}/match/calculate-statics",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"match",
-								"",
 								"calculate-statics"
 							]
 						}
