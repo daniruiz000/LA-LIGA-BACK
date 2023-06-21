@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import { matchOdm } from "../odm/match.odm";
 import { generateLeagueFunction } from "../utils/generateLeagueFunction";
 import { convertDateStringToDate } from "../utils/convertDateStringToDate";
+import { Match } from "../entities/match-entity";
+import { calculateTeamStatisticsFunction } from "../utils/calculateTeamStatisticsFunction";
 
 export const getMatchs = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
@@ -70,6 +72,26 @@ export const createMatch = async (req: Request, res: Response, next: NextFunctio
 
     const createdMatch = await matchOdm.createMatch(req.body);
     res.status(201).json(createdMatch);
+  } catch (error) {
+    next(error);
+  }
+};
+export const calculateTeamStatistics = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    // Solo ADMIN
+    if (req.user.rol !== "ADMIN") {
+      res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
+      return;
+    }
+
+    const matches = await Match.find();
+    if (!matches) {
+      res.status(404).json({ error: "No hay partidos" });
+      return;
+    }
+    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
+    const statistics = await calculateTeamStatisticsFunction(matches);
+    res.json(statistics);
   } catch (error) {
     next(error);
   }
@@ -146,4 +168,5 @@ export const matchService = {
   deleteMatch,
   updateMatch,
   generateLeague,
+  calculateTeamStatistics,
 };

@@ -45,6 +45,20 @@ export interface ITeamCreate {
   image?: string;
 }
 
+export interface ITeamsStatistics {
+  id: string;
+  name: string;
+  initials: string;
+  image?: string;
+  matchesPlayed: number;
+  matchesWon: number;
+  matchesLost: number;
+  matchesDrawn: number;
+  points: number;
+  goalsFor: number;
+  goalsAgainst: number;
+}
+
 export interface ITeam extends ITeamCreate, Document {}
 
 const teamSchema = new Schema<ITeamCreate>(
