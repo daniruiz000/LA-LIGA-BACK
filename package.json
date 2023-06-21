@@ -14,8 +14,8 @@
     "start:pro": "npm run build && node ./dist/index.js",
     "build": "tsc",
     "build:swagger-json": "ts-node-dev ./src/utils/generate-swagger-json.ts --ingore-watch",
-    "test:verbose": "cross-env DB_NAME=COLEGIO-TEST jest --maxWorkers=1",
-    "test": "cross-env DB_NAME=COLEGIO-TEST jest --silent --maxWorkers=1",
+    "test:verbose": "cross-env DB_NAME=LALIGA-TEST jest",
+    "test": "cross-env DB_NAME=LALIGA-TEST jest",
     "prepare": "husky install"
   },
   "repository": {

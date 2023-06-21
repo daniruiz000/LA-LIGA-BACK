@@ -174,7 +174,9 @@ matchRouter.put("/:id", isAuth, matchService.updateMatch);
  *       400:
  *         $ref: '#/components/schemas/Error'
  *       404:
- * components:
+ */
+
+/** components:
  *   schemas:
  *     MatchCreate:
  *       type: object
