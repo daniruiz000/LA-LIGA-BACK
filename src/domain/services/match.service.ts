@@ -95,12 +95,6 @@ export const createMatch = async (req: Request, res: Response, next: NextFunctio
 };
 export const calculateTeamStatistics = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    // Solo ADMIN
-    if (req.user.rol !== "ADMIN") {
-      res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
-      return;
-    }
-
     const matches = await Match.find().populate(["localTeam", "visitorTeam"]);
     if (!matches) {
       res.status(404).json({ error: "No hay partidos" });
