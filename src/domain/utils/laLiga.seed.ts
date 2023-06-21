@@ -1,5 +1,5 @@
 import { mongoConnect, mongoDisconnect } from "../repositories/mongo-repository"; // Importamos el archivo de conexión a la BBDD
-import { generateLeague } from "./generateLeague";
+import { generateLeagueWithData } from "./generateLeagueWithData";
 import { resetTeams } from "./resetTeams";
 import { resetUsers } from "./resetUsers";
 
@@ -13,7 +13,7 @@ const seedLaLiga = async (): Promise<void> => {
     await mongoConnect();
     await resetTeams()
     await resetUsers()
-    await generateLeague();
+    await generateLeagueWithData();
   } catch (error) {
     console.error(error);
   } finally {

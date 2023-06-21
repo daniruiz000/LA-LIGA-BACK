@@ -10,6 +10,8 @@ matchRouter.get("/", checkParams, matchService.getMatchs)
 matchRouter.get("/:id", matchService.getMatchById);
 matchRouter.post("/", isAuth, matchService.createMatch);
 matchRouter.delete("/:id", isAuth, matchService.deleteMatch);
+matchRouter.post("/generate-league", isAuth, matchService.generateLeague);
+matchRouter.post("/calculate-statics", isAuth, matchService.calculateTeamStatistics);
 matchRouter.put("/:id", isAuth, matchService.updateMatch);
 /**
  * @swagger
@@ -171,8 +173,6 @@ matchRouter.put("/:id", isAuth, matchService.updateMatch);
  *       400:
  *         $ref: '#/components/schemas/Error'
  *       404:
- */
-
  * components:
  *   schemas:
  *     MatchCreate:
