@@ -4,14 +4,15 @@ import { generateLeagueFunction } from "../utils/generateLeagueFunction";
 import { convertDateStringToDate } from "../utils/convertDateStringToDate";
 import { Match } from "../entities/match-entity";
 import { calculateTeamStatisticsFunction } from "../utils/calculateTeamStatisticsFunction";
+import { teamOdm } from "../odm/team.odm";
 
 export const getAllMatchs = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const matchs = await matchOdm.getAllMatchs();
-    const totalElements = await matchOdm.getMatchCount();
+    const totalElements = await teamOdm.getTeamCount();
 
     const response = {
-      totalItems: totalElements,
+      totalTeams: totalElements,
       data: matchs,
     };
 
@@ -100,7 +101,7 @@ export const calculateTeamStatistics = async (req: Request, res: Response, next:
       return;
     }
 
-    const matches = await Match.find();
+    const matches = await Match.find().populate(["localTeam", "visitorTeam"]);
     if (!matches) {
       res.status(404).json({ error: "No hay partidos" });
       return;

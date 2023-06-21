@@ -5,8 +5,8 @@ export const calculateTeamStatisticsFunction = async (matches: IMatchCreate[]): 
   const teams: Record<string, ITeamsStatistics> = {};
 
   matches.forEach((match) => {
-    const localTeamId = match.localTeam._id;
-    const visitorTeamId = match.visitorTeam._id;
+    const localTeamId = match.localTeam._id as string;
+    const visitorTeamId = match.visitorTeam._id as string;
 
     if (!teams[localTeamId]) {
       teams[localTeamId] = {
@@ -21,6 +21,7 @@ export const calculateTeamStatisticsFunction = async (matches: IMatchCreate[]): 
         points: 0,
         goalsFor: 0,
         goalsAgainst: 0,
+        position: 0,
       };
     }
 
@@ -37,6 +38,7 @@ export const calculateTeamStatisticsFunction = async (matches: IMatchCreate[]): 
         points: 0,
         goalsFor: 0,
         goalsAgainst: 0,
+        position: 0,
       };
     }
 
@@ -77,6 +79,14 @@ export const calculateTeamStatisticsFunction = async (matches: IMatchCreate[]): 
   });
 
   const teamStatistics = Object.values(teams);
+
+  // Ordenar el array en función de los puntos de cada equipo, de mayor a menor
+  teamStatistics.sort((a, b) => b.points - a.points);
+
+  // Asignar la posición correspondiente a cada equipo
+  teamStatistics.forEach((team, index) => {
+    team.position = index + 1;
+  });
 
   return teamStatistics;
 };

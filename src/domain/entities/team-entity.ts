@@ -57,6 +57,7 @@ export interface ITeamsStatistics {
   points: number;
   goalsFor: number;
   goalsAgainst: number;
+  position: number;
 }
 
 export interface ITeam extends ITeamCreate, Document {}
