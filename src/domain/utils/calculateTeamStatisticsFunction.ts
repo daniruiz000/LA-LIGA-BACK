@@ -45,38 +45,33 @@ export const calculateTeamStatisticsFunction = async (matches: IMatchCreate[]): 
     const localTeam = teams[localTeamId];
     const visitorTeam = teams[visitorTeamId];
 
-    localTeam.matchesPlayed++;
-    localTeam.goalsFor += match.goalsLocal ? match.goalsLocal.length : 0;
-    localTeam.goalsAgainst += match.goalsVisitor ? match.goalsVisitor.length : 0;
+    if (match.played && match.goalsLocal && match.goalsVisitor) {
+      localTeam.goalsFor += match.goalsLocal.length ? match.goalsLocal.length : 0;
+      localTeam.goalsAgainst += match.goalsVisitor.length ? match.goalsVisitor.length : 0;
 
-    visitorTeam.matchesPlayed++;
-    visitorTeam.goalsFor += match.goalsVisitor ? match.goalsVisitor.length : 0;
-    visitorTeam.goalsAgainst += match.goalsLocal ? match.goalsLocal.length : 0;
+      visitorTeam.goalsFor += match.goalsVisitor.length ? match.goalsVisitor.length : 0;
+      visitorTeam.goalsAgainst += match.goalsLocal.length ? match.goalsLocal.length : 0;
 
-    if (match.played) {
-      if (match.goalsLocal && match.goalsVisitor) {
-        if (match.goalsLocal.length > match.goalsVisitor.length) {
-          localTeam.points += 3;
-          localTeam.matchesWon++;
-          visitorTeam.matchesLost++;
-        } else if (match.goalsLocal.length < match.goalsVisitor.length) {
-          visitorTeam.points += 3;
-          visitorTeam.matchesWon++;
-          localTeam.matchesLost++;
-        } else {
-          localTeam.points++;
-          localTeam.matchesDrawn++;
-          visitorTeam.points++;
-          visitorTeam.matchesDrawn++;
-        }
-      } else {
+      localTeam.matchesPlayed++
+      visitorTeam.matchesPlayed++
+
+      if (match.goalsLocal.length > match.goalsVisitor.length) {
+        localTeam.points += 3;
+        localTeam.matchesWon++;
+        visitorTeam.matchesLost++;
+      } else if (match.goalsLocal.length < match.goalsVisitor.length) {
+        visitorTeam.points += 3;
+        visitorTeam.matchesWon++;
+        localTeam.matchesLost++;
+      } else if (match.goalsLocal.length === match.goalsVisitor.length) {
         localTeam.points++;
         localTeam.matchesDrawn++;
         visitorTeam.points++;
         visitorTeam.matchesDrawn++;
       }
     }
-  });
+  }
+  );
 
   const teamStatistics = Object.values(teams);
 

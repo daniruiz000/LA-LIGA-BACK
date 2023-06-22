@@ -5,7 +5,10 @@ import { matchOdm } from "../odm/match.odm";
 export const generateLeagueFunction = async (startDate: Date): Promise<any> => {
   try {
     const actualDate: Date = new Date()
-
+    if (actualDate > startDate) {
+      console.error("La fecha tiene que ser posterior a la actual");
+      return;
+    }
     const teams = await Team.find();
     if (teams.length === 0) {
       console.error("No hay equipos en la BBDD.");
