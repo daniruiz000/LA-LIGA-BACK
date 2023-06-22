@@ -37,13 +37,13 @@ export const getMyUser = async (req: Request, res: Response, next: NextFunction)
   try {
     // ADMIN / EL PROPIO USUARIO A SÍ MISMO (CUALQUIER USUARIO LOGADO)
     const user = await userOdm.getUserById(req.user.id as string);
-    const playersOnMyTeam = await userOdm.getPlayersByIdTeam(req.user.team as string)
-    const matchsOnMyTeam = await matchOdm.getMatchsByTeamId(req.user.team as string)
+    const playersOnMyTeam = await userOdm.getPlayersByIdTeam(req.user.team as string);
+    const matchsOnMyTeam = await matchOdm.getMatchsByTeamId(req.user.team as string);
     const response = {
       user,
       playersOnMyTeam: req.user.rol === ROL.ADMIN ? [] : playersOnMyTeam,
-      matchsOnMyTeam
-    }
+      matchsOnMyTeam,
+    };
     res.json(response);
   } catch (error) {
     next(error);
@@ -57,7 +57,7 @@ export const getPlayersWithoutTeam = async (req: Request, res: Response, next: N
       res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
       return;
     }
-    const players = await userOdm.getPlayersWithoutTeam()
+    const players = await userOdm.getPlayersWithoutTeam();
     if (!players.length) {
       res.status(404).json({ error: "No existen jugadores sin equipo" });
     } else {
@@ -77,17 +77,17 @@ export const getUsersByMyTeam = async (req: Request, res: Response, next: NextFu
     }
     const teamId = req.user.team;
     if (teamId) {
-      const players = await userOdm.getPlayersByIdTeam(teamId)
+      const players = await userOdm.getPlayersByIdTeam(teamId);
       if (!players) {
         res.status(404).json({ error: "No existen jugadores para este equipo" });
         return;
       }
-      const manager = await userOdm.getManagerByIdTeam(teamId)
+      const manager = await userOdm.getManagerByIdTeam(teamId);
       if (!manager) {
         res.status(404).json({ error: "No existe manager para este equipo" });
         return;
       }
-      const matchs = await matchOdm.getMatchsByTeamId(teamId)
+      const matchs = await matchOdm.getMatchsByTeamId(teamId);
       if (!matchs) {
         res.status(404).json({ error: "No existe partidos para este equipo" });
         return;
@@ -95,8 +95,8 @@ export const getUsersByMyTeam = async (req: Request, res: Response, next: NextFu
       const response = {
         players,
         manager,
-        matchs
-      }
+        matchs,
+      };
       res.json(response);
     } else {
       res.status(404).json({ error: "No tienes equipo asignado" });
@@ -188,7 +188,7 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
     const updateUserId = req.params.id;
 
     // Solo ADMIN o el propio usuario a sí mismo (cualquier usuario logado) / MANAGER A LOS DE SU EQUIPO
-    if (req.user.rol !== "ADMIN" && (req.user.id !== updateUserId && req.user.rol !== "MANAGER")) {
+    if (req.user.rol !== "ADMIN" && req.user.id !== updateUserId && req.user.rol !== "MANAGER") {
       res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
       return;
     }
@@ -198,20 +198,18 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
       res.status(404).json({ error: "No existe el usuario para actualizar" });
       return;
     }
-    console.log("Este es el usuario que hay que actualizar:");
-    console.log(userToUpdate);
 
     // Guardamos el usuario actualizándolo con los parámetros que nos manden
     const newLastName = (req.user.id === updateUserId || req.user.rol === "ADMIN") && req.body.lastName ? req.body.lastName : userToUpdate.get("lastName");
     const newFirstName = (req.user.id === updateUserId || req.user.rol === "ADMIN") && req.body.firstName ? req.body.firstName : userToUpdate.get("firstName");
     const newEmail = (req.user.id === updateUserId || req.user.rol === "ADMIN") && req.body.email ? req.body.email : userToUpdate.get("email");
-    const newPassword = req.body.password
+    const newPassword = req.body.password;
     const newImage = (req.user.id === updateUserId || req.user.rol === "ADMIN") && req.body.image ? req.body.image : userToUpdate.get("image");
     const newRol = req.user.rol === "ADMIN" ? req.body.rol : userToUpdate.get("rol");
-    const newTeam = (req.user.rol === "MANAGER" && userToUpdate.get("team") === undefined) || (req.user.rol === "MANAGER" && req.user.team === userToUpdate.get("team")) || req.user.rol === "ADMIN" ? req.body.team : userToUpdate.get("team");
+    const newTeam = (req.user.rol === "MANAGER" && userToUpdate.get("team") === undefined) || (req.user.rol === "MANAGER" && req.user.team?.toString() === userToUpdate.toObject().team._id.toString()) || req.user.rol === "ADMIN" ? req.body.team : userToUpdate.get("team");
 
-    console.log("Esto llega en el body:");
-    console.log(req.body);
+    console.log("Asi queda el newTeam");
+    console.log(newTeam);
 
     if (req.body.password) {
       const userSended = { ...req.body, rol: newRol, team: newTeam, firstName: newFirstName, lastName: newLastName, email: newEmail, password: newPassword, image: newImage };
@@ -220,13 +218,12 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
     } else {
       const userSended = { ...req.body, rol: newRol, team: newTeam, firstName: newFirstName, lastName: newLastName, email: newEmail, image: newImage };
       Object.assign(userToUpdate, userSended);
+
       await userToUpdate.save();
     }
 
     // Quitamos la contraseña y el rol del usuario que enviamos en la respuesta
     const userToSend: any = userToUpdate.toObject();
-    console.log("Este seria el usuario actualizado");
-    console.log(userToSend);
     delete userToSend.password;
     delete userToSend.rol;
     res.json(userToSend);
@@ -259,12 +256,12 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
     // Generamos token JWT
     const jwtToken = generateToken(user._id.toString(), user.email);
 
-    const userToSend = user.toObject(user)
-    delete userToSend.password
+    const userToSend = user.toObject(user);
+    delete userToSend.password;
 
     res.status(200).json({
       token: jwtToken,
-      rol: userToSend.rol
+      rol: userToSend.rol,
     });
   } catch (error) {
     next(error);
