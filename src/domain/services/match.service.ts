@@ -110,16 +110,23 @@ export const calculateTeamStatistics = async (req: Request, res: Response, next:
 
 export const generateLeague = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
+    const actualDate: Date = new Date()
+    if (!req.body.startDate) {
+      res.status(404).json({ error: "Tiene que introducir una fecha de inicio con formato:'21/5/4' para realizar esta operación" });
+      return;
+    }
+    const startDate = convertDateStringToDate(req.body.startDate)
+    if (actualDate > startDate) {
+      res.status(404).json("La fecha tiene que ser posterior a la actual");
+      return;
+    }
+
     // Sólo ADMIN
     if (req.user.rol !== "ADMIN") {
       res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
       return;
     }
-    if (!req.body.startDate) {
-      res.status(401).json({ error: "Tiene que introducir una fecha de inicio con formato:'21/5/4' para realizar esta operación" });
-      return;
-    }
-    const startDate = convertDateStringToDate(req.body.startDate)
+
     const matchs = await generateLeagueFunction(startDate)
     res.json(matchs);
   } catch (error) {
