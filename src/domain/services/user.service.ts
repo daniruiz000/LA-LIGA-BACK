@@ -106,7 +106,7 @@ export const getUsersByMyTeam = async (req: Request, res: Response, next: NextFu
   }
 };
 
-export const getPlayersByTeamId = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const getUsersByTeamId = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     //  ADMIN
     if (req.user.rol !== "ADMIN") {
@@ -114,16 +114,20 @@ export const getPlayersByTeamId = async (req: Request, res: Response, next: Next
       return;
     }
     const teamId = req.params.team;
-    if (teamId) {
-      const players = await userOdm.getPlayersByIdTeam(teamId);
-      if (!players) {
-        res.status(404).json({ error: "No existen jugadores para este equipo" });
-      } else {
-        res.json(players);
-      }
-    } else {
-      res.status(404).json({ error: "No existe este equipo" });
+
+    if (!teamId) {
+      res.status(404).json({ error: "Tienes que introducir un id de equipo" });
+      return
     }
+
+    const players = await userOdm.getPlayersByIdTeam(teamId)
+    const manager = await userOdm.getManagerByIdTeam(teamId)
+
+    const response = {
+      players,
+      manager,
+    }
+    res.json(response)
   } catch (error) {
     next(error);
   }
@@ -267,7 +271,7 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
 export const userService = {
   getMyUser,
   getUsersByMyTeam,
-  getPlayersByTeamId,
+  getUsersByTeamId,
   getPlayersWithoutTeam,
   getUsers,
   getUserById,
