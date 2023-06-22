@@ -194,6 +194,8 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
       res.status(404).json({ error: "No existe el usuario para actualizar" });
       return;
     }
+    console.log("Este es el usuario que hay que actualizar:");
+    console.log(userToUpdate);
 
     // Guardamos el usuario actualizándolo con los parámetros que nos manden
     const newLastName = (req.user.id === updateUserId || req.user.rol === "ADMIN") && req.body.lastName ? req.body.lastName : userToUpdate.get("lastName");
@@ -202,7 +204,10 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
     const newPassword = req.body.password
     const newImage = (req.user.id === updateUserId || req.user.rol === "ADMIN") && req.body.image ? req.body.image : userToUpdate.get("image");
     const newRol = req.user.rol === "ADMIN" ? req.body.rol : userToUpdate.get("rol");
-    const newTeam = (req.user.rol === "MANAGER" && req.user.team === userToUpdate.get("team")) || req.user.rol === "ADMIN" ? req.body.team : userToUpdate.get("team");
+    const newTeam = (req.user.rol === "MANAGER" && userToUpdate.get("team") === undefined) || (req.user.rol === "MANAGER" && req.user.team === userToUpdate.get("team")) || req.user.rol === "ADMIN" ? req.body.team : userToUpdate.get("team");
+
+    console.log("Esto llega en el body:");
+    console.log(req.body);
 
     if (req.body.password) {
       const userSended = { ...req.body, rol: newRol, team: newTeam, firstName: newFirstName, lastName: newLastName, email: newEmail, password: newPassword, image: newImage };
@@ -216,6 +221,8 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
 
     // Quitamos la contraseña y el rol del usuario que enviamos en la respuesta
     const userToSend: any = userToUpdate.toObject();
+    console.log("Este seria el usuario actualizado");
+    console.log(userToSend);
     delete userToSend.password;
     delete userToSend.rol;
     res.json(userToSend);
