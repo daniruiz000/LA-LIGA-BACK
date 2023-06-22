@@ -105,7 +105,7 @@ export const getUsersByMyTeam = async (req: Request, res: Response, next: NextFu
     next(error);
   }
 };
-// SIN USAR
+
 export const getPlayersByTeamId = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     //  ADMIN
