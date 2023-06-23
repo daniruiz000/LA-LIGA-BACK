@@ -22,7 +22,7 @@ const getPlayersByIdTeam = async (teamId: string): Promise<IUser[]> => {
 };
 
 const getPlayersWithoutTeam = async (): Promise<IUser[]> => {
-  const players: IUser[] | null = await User.find({ team: { $in: [null, undefined] }, rol: ROL.PLAYER }).populate("team");
+  const players: IUser[] | null = await User.find({ team: { $in: [null, undefined] }, rol: { $in: [ROL.PLAYER, ROL.MANAGER] } }).populate("team");
   console.log(players)
   return players
 };
