@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { teamOdm } from "../odm/team.odm";
+import { userOdm } from "../odm/user.odm";
 
 export const getTeams = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
@@ -12,14 +13,25 @@ export const getTeams = async (req: Request, res: Response, next: NextFunction):
       return;
     }
 
-    const team = await teamOdm.getAllTeams(page, limit);
+    const teams = await teamOdm.getAllTeams(page, limit);
+
+    const newTeams = []
+    for (let i = 0; i < teams.length; i++) {
+      const team = teams[i];
+      const manager = await userOdm.getManagerByIdTeam(team.id)
+      const newTeam = {
+        team,
+        manager,
+      }
+      newTeams.push(newTeam)
+    }
     const totalElements = await teamOdm.getTeamCount();
 
     const response = {
       totalItems: totalElements,
       totalPages: Math.ceil(totalElements / limit),
       currentPage: page,
-      data: team,
+      data: newTeams,
     };
 
     res.json(response);
