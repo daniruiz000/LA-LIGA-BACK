@@ -206,8 +206,7 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
     const newPassword = req.body.password;
     const newImage = (req.user.id === updateUserId || req.user.rol === "ADMIN") && req.body.image ? req.body.image : userToUpdate.get("image");
     const newRol = req.user.rol === "ADMIN" ? req.body.rol : userToUpdate.get("rol");
-    const newTeam = (req.user.rol === "MANAGER" && userToUpdate.get("team") === undefined) || (req.user.rol === "MANAGER" && req.user.team?.toString() === userToUpdate.toObject().team._id.toString()) || req.user.rol === "ADMIN" ? req.body.team : userToUpdate.get("team");
-
+    const newTeam = (req.user.rol === "MANAGER" && !userToUpdate.get("team")) || (req.user.rol === "MANAGER" && req.user.team?.toString() === userToUpdate.toObject().team?._id.toString()) || req.user.rol === "ADMIN" ? req.body.team : userToUpdate.get("team");
     console.log("Asi queda el newTeam");
     console.log(newTeam);
 
