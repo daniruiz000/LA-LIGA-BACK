@@ -3,7 +3,7 @@ import { User, IUser, IUserCreate, ROL } from "../entities/user-entity";
 import { Document } from "mongoose";
 
 const getAllUsers = async (page: number, limit: number): Promise<IUser[]> => {
-  return await User.find()
+  return await User.find().populate("team")
     .limit(limit)
     .skip((page - 1) * limit);
 };
