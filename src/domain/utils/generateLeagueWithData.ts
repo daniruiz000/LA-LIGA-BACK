@@ -12,11 +12,18 @@ export const generateLeagueWithData = async (): Promise<void> => {
       console.error("No hay equipos en la BBDD.");
       return;
     }
+
+    if (teams.length % 2 !== 0) {
+      console.error("La cantidad de equipos es impar.");
+      return
+    }
+
     const players = await User.find({ rol: ROL.PLAYER, team: { $in: teams.map(team => team.id) } });
     if (players.length === 0) {
       console.error("No hay jugadores en la BBDD.");
       return;
     }
+
     await matchOdm.deleteAllMatch();
     console.log("Partidos borrados");
 

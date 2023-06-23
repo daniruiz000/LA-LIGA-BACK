@@ -9,10 +9,15 @@ export const generateLeagueFunction = async (startDate: Date): Promise<any> => {
       console.error("La fecha tiene que ser posterior a la actual");
       return;
     }
+
     const teams = await Team.find();
     if (teams.length === 0) {
       console.error("No hay equipos en la BBDD.");
       return;
+    }
+    if (teams.length % 2 !== 0) {
+      console.error("La cantidad de equipos es impar.");
+      return
     }
 
     await matchOdm.deleteAllMatch();
