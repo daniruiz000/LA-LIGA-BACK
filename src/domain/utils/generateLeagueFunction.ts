@@ -1,6 +1,7 @@
 import { IMatchCreate } from "../entities/match-entity";
 import { Team } from "../entities/team-entity";
 import { matchOdm } from "../odm/match.odm";
+import { shuffleIteamArray } from "./shuffleIteamArray";
 
 export const generateLeagueFunction = async (startDate: Date): Promise<any> => {
   try {
@@ -10,7 +11,9 @@ export const generateLeagueFunction = async (startDate: Date): Promise<any> => {
       return;
     }
 
-    const teams = await Team.find();
+    const teamsSended = await Team.find();
+    const teams = shuffleIteamArray(teamsSended)
+
     if (teams.length === 0) {
       console.error("No hay equipos en la BBDD.");
       return;

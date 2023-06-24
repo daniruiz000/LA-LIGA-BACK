@@ -4,10 +4,13 @@ import { ROL, User } from "../entities/user-entity";
 import { matchOdm } from "../odm/match.odm";
 import { convertDateStringToDate } from "./convertDateStringToDate";
 import { generateGoalIds } from "./generateGoals";
+import { shuffleIteamArray } from "./shuffleIteamArray";
 
 export const generateLeagueWithData = async (): Promise<void> => {
   try {
-    const teams = await Team.find();
+    const teamsSended = await Team.find();
+    const teams = shuffleIteamArray(teamsSended)
+
     if (teams.length === 0) {
       console.error("No hay equipos en la BBDD.");
       return;
