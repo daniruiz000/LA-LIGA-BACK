@@ -41,7 +41,7 @@ const createMatchsFromArray = async (matchList: IMatchCreate[]): Promise<void> =
   }
 };
 
-const deleteMatch = async (id: string): Promise<ModifyResult<Document<IMatch>>> => {
+const deleteMatch = async (id: string): Promise<ModifyResult<Document<IMatch>> | null> => {
   return await Match.findByIdAndDelete(id);
 };
 
