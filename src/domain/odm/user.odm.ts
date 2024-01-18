@@ -57,8 +57,7 @@ const createUsersFromArray = async (userList: IUserCreate[]): Promise<void> => {
 };
 
 const deleteUser = async (id: string): Promise<ModifyResult<Document<IUserCreate> | null>> => {
-  const result = await User.findByIdAndDelete(id);
-  return result ?? null;
+  return await User.findByIdAndDelete(id);
 };
 
 const deleteAllUsers = async (): Promise<boolean> => {

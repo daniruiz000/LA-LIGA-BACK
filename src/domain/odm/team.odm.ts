@@ -40,8 +40,7 @@ const createTeamsFromArray = async (teamList: ITeamCreate[]): Promise<void> => {
 };
 
 const deleteTeam = async (id: string): Promise<ModifyResult<Document<ITeam> | null>> => {
-  const result = await Team.findByIdAndDelete(id);
-  return result ?? null;
+  return await Team.findByIdAndDelete(id);
 };
 
 const deleteAllTeams = async (): Promise<boolean> => {
