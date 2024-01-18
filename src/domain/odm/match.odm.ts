@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/indent */
 import { Match, IMatch, IMatchCreate } from "../entities/match-entity";
-import { Document, ModifyResult, Types } from "mongoose";
+import { Document, ModifyResult } from "mongoose";
 
 const getAllMatchsPaginated = async (page: number, limit: number): Promise<IMatch[]> => {
   return await Match.find()
@@ -41,20 +41,9 @@ const createMatchsFromArray = async (matchList: IMatchCreate[]): Promise<void> =
   }
 };
 
-const deleteMatch = async (
-  id: string
-): Promise<
-  ModifyResult<
-    Document<unknown, unknown, unknown> &
-      Omit<
-        {
-          _id: Types.ObjectId;
-        },
-        never
-      >
-  >
-> => {
-  return await Match.findByIdAndDelete(id);
+const deleteMatch = async (id: string): Promise<ModifyResult<Document<IMatch> | null>> => {
+  const result = await Match.findByIdAndDelete(id);
+  return result ?? null;
 };
 
 const deleteAllMatch = async (): Promise<boolean> => {

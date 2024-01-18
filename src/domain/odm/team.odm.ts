@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 import { ModifyResult } from "mongodb";
 import { Team, ITeam, ITeamCreate } from "../entities/team-entity";
-import { Document, Types } from "mongoose";
+import { Document } from "mongoose";
 
 const getAllTeams = async (page: number, limit: number): Promise<ITeam[]> => {
   return await Team.find()
@@ -39,17 +39,9 @@ const createTeamsFromArray = async (teamList: ITeamCreate[]): Promise<void> => {
   }
 };
 
-const deleteTeam = async (
-  id: string
-): Promise<
-  ModifyResult<
-    Document<unknown, unknown, ITeam> &
-      ITeam & {
-        _id: Types.ObjectId;
-      }
-  >
-> => {
-  return await Team.findByIdAndDelete(id);
+const deleteTeam = async (id: string): Promise<ModifyResult<Document<ITeam> | null>> => {
+  const result = await Team.findByIdAndDelete(id);
+  return result ?? null;
 };
 
 const deleteAllTeams = async (): Promise<boolean> => {

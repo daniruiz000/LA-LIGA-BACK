@@ -2,7 +2,7 @@
 import { ModifyResult } from "mongodb";
 import { ITeamCreate, Team } from "../entities/team-entity";
 import { User, IUser, IUserCreate, ROL } from "../entities/user-entity";
-import { Document, Types } from "mongoose";
+import { Document } from "mongoose";
 
 const getAllUsers = async (page: number, limit: number): Promise<IUser[]> => {
   return await User.find()
@@ -56,17 +56,9 @@ const createUsersFromArray = async (userList: IUserCreate[]): Promise<void> => {
   }
 };
 
-const deleteUser = async (
-  id: string
-): Promise<
-  ModifyResult<
-    Document<unknown, unknown, IUserCreate> &
-      IUserCreate & {
-        _id: Types.ObjectId;
-      }
-  >
-> => {
-  return await User.findByIdAndDelete(id);
+const deleteUser = async (id: string): Promise<ModifyResult<Document<IUserCreate> | null>> => {
+  const result = await User.findByIdAndDelete(id);
+  return result ?? null;
 };
 
 const deleteAllUsers = async (): Promise<boolean> => {
