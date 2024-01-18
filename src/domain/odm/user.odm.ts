@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/indent */
+import { ModifyResult } from "mongodb";
 import { ITeamCreate, Team } from "../entities/team-entity";
 import { User, IUser, IUserCreate, ROL } from "../entities/user-entity";
-import { Document } from "mongoose";
+import { Document, Types } from "mongoose";
 
 const getAllUsers = async (page: number, limit: number): Promise<IUser[]> => {
-  return await User.find().populate("team")
+  return await User.find()
+    .populate("team")
     .limit(limit)
     .skip((page - 1) * limit);
 };
@@ -18,47 +21,56 @@ const getUserById = async (id: string): Promise<Document<IUser> | null> => {
 
 const getPlayersByIdTeam = async (teamId: string): Promise<IUser[]> => {
   const players: IUser[] | null = await User.find({ team: teamId, rol: ROL.PLAYER }).populate("team");
-  return players
+  return players;
 };
 
 const getPlayersWithoutTeam = async (): Promise<IUser[]> => {
   const players: IUser[] | null = await User.find({ team: { $in: [null, undefined] }, rol: { $in: [ROL.PLAYER, ROL.MANAGER] } }).populate("team");
-  console.log(players)
-  return players
+  console.log(players);
+  return players;
 };
 
 const getManagerByIdTeam = async (teamId: string): Promise<IUser[]> => {
   const players: IUser[] | null = await User.find({ team: teamId, rol: ROL.MANAGER }).populate("team");
-  return players
+  return players;
 };
 
 const getUserByEmailWithPassword = async (emailPassed: string): Promise<Document<IUser> | null> => {
-  const user: Document<IUser> | null = await User.findOne({ email: emailPassed }).select("+password") as any;
+  const user: Document<IUser> | null = (await User.findOne({ email: emailPassed }).select("+password")) as any;
   return user;
 };
 
 const createUser = async (userData: IUserCreate): Promise<Document<IUser>> => {
   const user = new User(userData);
-  const document: Document<IUser> = await user.save() as any;
-  const userCopy = document.toObject()
-  delete userCopy.password
-  delete userCopy.rol
+  const document: Document<IUser> = (await user.save()) as any;
+  const userCopy = document.toObject();
+  delete userCopy.password;
+  delete userCopy.rol;
   return userCopy;
 };
 
 const createUsersFromArray = async (userList: IUserCreate[]): Promise<void> => {
-  for (let i = 0; i < userList.length; i++) {
-    const user = userList[i];
+  for (const element of userList) {
+    const user = element;
     await userOdm.createUser(user);
   }
 };
 
-const deleteUser = async (id: string): Promise<Document<IUser> | null> => {
+const deleteUser = async (
+  id: string
+): Promise<
+  ModifyResult<
+    Document<unknown, unknown, IUserCreate> &
+      IUserCreate & {
+        _id: Types.ObjectId;
+      }
+  >
+> => {
   return await User.findByIdAndDelete(id);
 };
 
 const deleteAllUsers = async (): Promise<boolean> => {
-  return await User.collection.drop()
+  return await User.collection.drop();
 };
 
 const updateUser = async (id: string, userData: IUserCreate): Promise<Document<IUser> | null> => {
@@ -78,9 +90,7 @@ const assignTeamToUser = async (userId: string, teamId: string): Promise<Documen
   return await User.findByIdAndUpdate(userId, { team: teamId }, { new: true });
 };
 
-const removeTeamFromUser = async (
-  userId: string
-): Promise<Document<IUser> | null> => {
+const removeTeamFromUser = async (userId: string): Promise<Document<IUser> | null> => {
   return await User.findByIdAndUpdate(userId, { team: null }, { new: true });
 };
 
@@ -99,5 +109,5 @@ export const userOdm = {
   updateUser,
   updateRoleUser,
   assignTeamToUser,
-  removeTeamFromUser
+  removeTeamFromUser,
 };

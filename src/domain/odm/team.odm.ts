@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/indent */
+import { ModifyResult } from "mongodb";
 import { Team, ITeam, ITeamCreate } from "../entities/team-entity";
-import { Document } from "mongoose";
+import { Document, Types } from "mongoose";
 
 const getAllTeams = async (page: number, limit: number): Promise<ITeam[]> => {
   return await Team.find()
@@ -20,29 +22,38 @@ const getMyTeam = async (page: number, limit: number): Promise<ITeam[]> => {
 };
 
 const getTeamByName = async (name: string): Promise<Document<ITeam>[]> => {
-  return await Team.find({ name: new RegExp("^" + name.toLowerCase(), "i") })
+  return await Team.find({ name: new RegExp("^" + name.toLowerCase(), "i") });
 };
 
 const createTeam = async (teamData: ITeamCreate): Promise<Document<ITeam>> => {
   const team = new Team(teamData);
-  const document: Document<ITeam> = await team.save() as any;
+  const document: Document<ITeam> = (await team.save()) as any;
 
   return document;
 };
 
 const createTeamsFromArray = async (teamList: ITeamCreate[]): Promise<void> => {
-  for (let i = 0; i < teamList.length; i++) {
-    const team = teamList[i];
+  for (const element of teamList) {
+    const team = element;
     await teamOdm.createTeam(team);
   }
 };
 
-const deleteTeam = async (id: string): Promise<Document<ITeam> | null> => {
+const deleteTeam = async (
+  id: string
+): Promise<
+  ModifyResult<
+    Document<unknown, unknown, ITeam> &
+      ITeam & {
+        _id: Types.ObjectId;
+      }
+  >
+> => {
   return await Team.findByIdAndDelete(id);
 };
 
 const deleteAllTeams = async (): Promise<boolean> => {
-  return await Team.collection.drop()
+  return await Team.collection.drop();
 };
 
 const updateTeam = async (id: string, teamData: ITeamCreate): Promise<Document<ITeam> | null> => {

@@ -62,7 +62,7 @@ export interface ITeamsStatistics {
 
 export interface ITeam extends ITeamCreate, Document {}
 
-const teamSchema = new Schema<ITeamCreate>(
+const teamSchema = new Schema<ITeam>(
   {
     name: {
       type: String,
