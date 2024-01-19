@@ -35,8 +35,7 @@ const createMatch = async (matchData: IMatchCreate): Promise<Document<IMatch>> =
 };
 
 const createMatchsFromArray = async (matchList: IMatchCreate[]): Promise<void> => {
-  for (const element of matchList) {
-    const match = element;
+  for (const match of matchList) {
     await matchOdm.createMatch(match);
   }
 };

@@ -33,8 +33,7 @@ const createTeam = async (teamData: ITeamCreate): Promise<Document<ITeam>> => {
 };
 
 const createTeamsFromArray = async (teamList: ITeamCreate[]): Promise<void> => {
-  for (const element of teamList) {
-    const team = element;
+  for (const team of teamList) {
     await teamOdm.createTeam(team);
   }
 };
