@@ -57,7 +57,7 @@ export const getMatchByTeamId = async (req: Request, res: Response, next: NextFu
       res.status(404).json({ error: "No existe el equipo" });
       return;
     }
-    res.json(match)
+    res.json(match);
   } catch (error) {
     next(error);
   }
@@ -73,7 +73,7 @@ export const getMatchById = async (req: Request, res: Response, next: NextFuncti
       res.status(404).json({ error: "No existe el partido" });
       return;
     }
-    res.json(match)
+    res.json(match);
   } catch (error) {
     next(error);
   }
@@ -110,12 +110,12 @@ export const calculateTeamStatistics = async (req: Request, res: Response, next:
 
 export const generateLeague = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const actualDate: Date = new Date()
+    const actualDate: Date = new Date();
     if (!req.body.startDate) {
       res.status(404).json({ error: "Tiene que introducir una fecha de inicio con formato:'21/5/4' para realizar esta operación" });
       return;
     }
-    const startDate = convertDateStringToDate(req.body.startDate)
+    const startDate = convertDateStringToDate(req.body.startDate);
     if (actualDate > startDate) {
       res.status(404).json("La fecha tiene que ser posterior a la actual");
       return;
@@ -127,7 +127,7 @@ export const generateLeague = async (req: Request, res: Response, next: NextFunc
       return;
     }
 
-    const matchs = await generateLeagueFunction(startDate)
+    const matchs = await generateLeagueFunction(startDate);
     res.json(matchs);
   } catch (error) {
     next(error);
@@ -136,18 +136,18 @@ export const generateLeague = async (req: Request, res: Response, next: NextFunc
 
 export const deleteMatch = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    // Sólo ADMIN
     const id = req.params.id;
+    const matchDeleted = await matchOdm.deleteMatch(id);
+    if (!matchDeleted) {
+      res.status(404).json({ error: "No existe el partido" });
+      return;
+    }
+    // Sólo ADMIN
     if (req.user.rol !== "ADMIN") {
       res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
       return;
     }
 
-    const matchDeleted = await matchOdm.deleteMatch(id);
-    if (!matchDeleted) {
-      res.status(404).json({ error: "No existe el equipo" });
-      return;
-    }
     res.json(matchDeleted);
   } catch (error) {
     next(error);
@@ -157,21 +157,22 @@ export const deleteMatch = async (req: Request, res: Response, next: NextFunctio
 export const updateMatch = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const id = req.params.id;
+    const matchToUpdate = await matchOdm.getMatchById(id);
+
+    if (!matchToUpdate) {
+      res.status(404).json({ error: "No existe el partido" });
+      return;
+    }
+
     // Sólo ADMIN
     if (req.user.rol !== "ADMIN") {
       res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
       return;
     }
 
-    const matchToUpdate = await matchOdm.getMatchById(id);
-    if (!matchToUpdate) {
-      res.status(404).json({ error: "No existe el equipo" });
-      return;
-    }
-
     // Guardamos el equipo actualizandolo con los parametros que nos manden
     Object.assign(matchToUpdate, req.body);
-    const matchToSend = await matchToUpdate.save()
+    const matchToSend = await matchToUpdate.save();
     res.json(matchToSend);
   } catch (error) {
     next(error);

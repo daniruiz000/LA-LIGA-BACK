@@ -15,15 +15,14 @@ export const getTeams = async (req: Request, res: Response, next: NextFunction):
 
     const teams = await teamOdm.getAllTeams(page, limit);
 
-    const newTeams = []
-    for (let i = 0; i < teams.length; i++) {
-      const team = teams[i];
-      const manager = await userOdm.getManagerByIdTeam(team.id)
+    const newTeams = [];
+    for (const team of teams) {
+      const manager = await userOdm.getManagerByIdTeam(team.id);
       const newTeam = {
         team,
         manager,
-      }
-      newTeams.push(newTeam)
+      };
+      newTeams.push(newTeam);
     }
     const totalElements = await teamOdm.getTeamCount();
 
@@ -53,7 +52,7 @@ export const getTeamById = async (req: Request, res: Response, next: NextFunctio
       res.status(404).json({ error: "No existe el equipo" });
       return;
     }
-    res.json(team)
+    res.json(team);
   } catch (error) {
     next(error);
   }
@@ -71,7 +70,7 @@ export const getTeamByName = async (req: any, res: Response, next: NextFunction)
     if (!team) {
       res.status(404).json({ error: "No existe el equipo" });
     }
-    res.json(team)
+    res.json(team);
   } catch (error) {
     next(error);
   }
@@ -116,7 +115,7 @@ export const updateTeam = async (req: Request, res: Response, next: NextFunction
   try {
     const id = req.params.id;
     // Sólo ADMIN y MANAGER
-    if (req.user.rol !== "ADMIN" && (req.user.rol !== "MANAGER" && req.user.team !== id)) {
+    if (req.user.rol !== "ADMIN" && req.user.rol !== "MANAGER" && req.user.team !== id) {
       res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
       return;
     }
@@ -129,7 +128,7 @@ export const updateTeam = async (req: Request, res: Response, next: NextFunction
 
     // Guardamos el equipo actualizandolo con los parametros que nos manden
     Object.assign(teamToUpdate, req.body);
-    const teamToSend = await teamToUpdate.save()
+    const teamToSend = await teamToUpdate.save();
     res.json(teamToSend);
   } catch (error) {
     next(error);
